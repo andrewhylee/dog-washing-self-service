@@ -127,7 +127,7 @@ async function testBooking() {
   });
   const response = await page.goto(`${baseUrl}/book`, { waitUntil: "networkidle" });
   await expect("booking: page responds", response?.ok());
-  await expect("booking: disclaimer visible", await page.getByText(/does not save information/i).isVisible());
+  await expect("booking: intro visible", await page.getByText(/Reserve your tub online/i).isVisible());
   const dimensions = await page.evaluate(() => ({
     viewportWidth: document.documentElement.clientWidth,
     documentWidth: document.documentElement.scrollWidth,
@@ -142,7 +142,8 @@ async function testBooking() {
       .join(", "),
   );
   await page.evaluate(() => (document.activeElement instanceof HTMLElement ? document.activeElement.blur() : undefined));
-  await page.getByRole("button", { name: /Tue 01/i }).click();
+  await page.getByRole("tab", { name: /September 2026/i }).click();
+  await page.getByRole("gridcell", { name: "Tue, Sep 1", exact: true }).click();
   await page.getByRole("button", { name: "11:00 AM" }).click();
   await page.getByRole("button", { name: /Continue/i }).click();
   await expect("booking: dog step visible", await page.getByRole("heading", { name: /Who’s getting fresh/i }).isVisible());
@@ -153,9 +154,9 @@ async function testBooking() {
     style: ".skip-link { display: none !important; }",
   });
   await page.getByRole("button", { name: /Review/i }).click();
-  await expect("booking: selection preserved", await page.getByText("Tue, 11:00 AM").isVisible());
+  await expect("booking: selection preserved", await page.getByText(/Sep 1, 11:00 AM/i).isVisible());
   await expect("booking: dog name preserved", await page.getByText("Mochi", { exact: true }).isVisible());
-  await expect("booking: no-submission confirmation", await page.getByText(/Nothing was reserved/i).isVisible());
+  await expect("booking: confirmation shown", await page.getByText(/hold your tub/i).isVisible());
   await page.screenshot({
     path: `${outputDir}/booking-mobile-review-v2.png`,
     fullPage: true,

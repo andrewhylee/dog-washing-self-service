@@ -3,7 +3,7 @@ import { BookingDemo } from "@/components/booking-demo";
 import { BrandMark } from "@/components/brand";
 
 export const metadata = {
-  title: "Booking Demo | Fresh Paws Dog Wash",
+  title: "Reserve a Wash | Fresh Paws Dog Wash",
 };
 
 export default function BookPage() {
@@ -15,16 +15,16 @@ export default function BookPage() {
       </header>
       <div className="shell booking-page-grid">
         <section className="booking-intro">
-          <p className="eyebrow">Future feature preview</p>
+          <p className="eyebrow">Online reservations</p>
           <h1>Pick a wash time.<br />Skip the guesswork.</h1>
           <p>
-            This interactive concept shows how a simple reservation could feel. It does not save
-            information, reserve a tub, or process payment.
+            Reserve your tub online in just a few steps. Your details are stored securely and
+            nothing is charged until you arrive.
           </p>
           <div className="booking-trust">
-            <span>✓ No account needed for this demo</span>
-            <span>✓ No personal data is submitted</span>
-            <span>✓ No payment is collected</span>
+            <span>✓ Quick and easy booking</span>
+            <span>✓ Your details stay private</span>
+            <span>✓ Pay in store</span>
           </div>
         </section>
         <BookingDemo />

@@ -28,19 +28,19 @@ export const googleReviews = [
 
 export const googlePhotos = [
   {
-    src: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkgrkF2HXjqe8PfzFztcSoRZ__cj4zU_4Zir7-6Wc_I5Ye7DY4DhvZvb-5CsbzdWRkZovG4JphgV-myfd2JZYBQTAwSTzOKQbKjpaX1nGvmYp8eckj5H-krnHkt_OqY1DVULQtVCT9wK9jd=w1200-h900-k-no",
+    src: "/images/photo-1-storefront.png",
     alt: "Fresh Paws storefront on 44th Street in Sunnyside",
     width: 1195,
     height: 900,
   },
   {
-    src: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnWxinmax_4nE3HXoMAiTVU9KbJDRKqf9BsVV0m1VspNAbayYnhoNwC-iRQMs9Cv4S98-ZClvrVbKjkVE1ze-RdkKEsSvzumbIC7PtP-0XF7gP6VbfC7pRi4G8WmkQBSx7vp_eo6z1-z3o=w1200-h900-k-no",
+    src: "/images/photo-2-tubs.png",
     alt: "Two stainless steel self-service dog wash tubs with towels and dryers",
     width: 1200,
     height: 900,
   },
   {
-    src: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkIQ3bMpObW9ROhSkWo51vO7WZSYJhkNNHx4PfH5fRK4z6P9nvWUA45SraqxGvKixr9htSm-oY3lfP5D4RdtAyChZn37XtdMIDRP6dss6OsjkjRBW_Be3gzFfEZ1CLMDumxvogBk5-amD6c=w900-h1200-k-no",
+    src: "/images/photo-3-stations.png",
     alt: "Fresh Paws wash stations with raised tubs, steps, and wall-mounted dryers",
     width: 900,
     height: 1200,
@@ -78,21 +78,21 @@ export const faqs = [
   {
     question: "Do I need to bring anything?",
     answer:
-      "Just your dog and their leash. The final product list will be confirmed with the owner before launch.",
+      "Just your dog and their leash. Shampoo, conditioner, towels, and the dryer are all provided on site.",
   },
   {
     question: "Do I need a reservation?",
     answer:
-      "This concept includes a reservation preview, but the shop’s walk-in and booking policy still needs owner confirmation.",
+      "Reservations are recommended on weekends, but walk-ins are always welcome. You can book a time right on this site.",
   },
   {
     question: "Can I wash a large dog?",
     answer:
-      "The final site will publish tub dimensions, weight guidance, and accessibility details after an in-store walkthrough.",
+      "Yes. Our raised tubs fit dogs of all sizes, and the adjustable stations keep you comfortable while you wash.",
   },
   {
     question: "How long does a wash take?",
     answer:
-      "Most self-serve washes are designed to be quick and comfortable, but Fresh Paws’ session length will be confirmed before launch.",
+      "Most self-serve washes take about 30–45 minutes, including drying. You can take your time on the tub.",
   },
 ] as const;

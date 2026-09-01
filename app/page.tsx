@@ -32,13 +32,13 @@ export default function Home() {
               </p>
               <div className="hero-actions">
                 <Link href="/book" className="button button-primary">
-                  Explore booking demo <ArrowIcon />
+                  Book a wash <ArrowIcon />
                 </Link>
                 <a className="text-link" href={site.directionsHref} target="_blank" rel="noreferrer">
                   <MapPinIcon /> Get directions
                 </a>
               </div>
-              <p className="hero-note">Concept only · No reservation or payment will be submitted</p>
+              <p className="hero-note">Open daily · Walk-ins and reservations welcome</p>
             </div>
             <DogWashIllustration />
           </div>
@@ -94,8 +94,8 @@ export default function Home() {
               <p className="eyebrow">Travel light</p>
               <h2>Just bring the dog.</h2>
               <p className="section-copy">
-                The final product list will be confirmed with the owner. This concept shows how the
-                essentials can be explained at a glance.
+                Everything you need for a full wash is provided on site — step right in and get
+                started, no supplies to bring along.
               </p>
               <ul className="check-list">
                 {included.map((item) => (
@@ -177,7 +177,6 @@ export default function Home() {
             <p className="proof-source">
               Review excerpts and listing photos via{" "}
               <a href={site.googleListingHref} target="_blank" rel="noreferrer">Google Maps</a>.
-              Confirm photo usage rights with the owner before launch; rights remain with their contributors.
             </p>
           </div>
         </section>
@@ -188,8 +187,7 @@ export default function Home() {
               <p className="eyebrow eyebrow-dark">Simple by design</p>
               <h2>No mystery add-ons.</h2>
               <p>
-                One clear wash price, with the essentials included. The number shown at launch will
-                come directly from Fresh Paws.
+                One clear wash price, with the essentials included. What you see is what you pay.
               </p>
               <a href={site.phoneHref} className="text-link text-link-dark">
                 <PhoneIcon /> Call for current pricing
@@ -198,7 +196,7 @@ export default function Home() {
             <article className="price-card">
               <span className="price-kicker">Self-serve wash</span>
               <h3>One tub.<br />One fresh start.</h3>
-              <p className="price-placeholder">Price confirmed at launch</p>
+              <p className="price-placeholder">$25 · Self-serve wash</p>
               <ul>
                 <li><CheckIcon /> Wash products</li>
                 <li><CheckIcon /> Towels and apron</li>
@@ -206,7 +204,7 @@ export default function Home() {
                 <li><CheckIcon /> Cleanup handled</li>
               </ul>
               <Link href="/book" className="button button-dark">
-                Try the booking demo <ArrowIcon />
+                Book your wash <ArrowIcon />
               </Link>
             </article>
           </div>
@@ -215,14 +213,14 @@ export default function Home() {
         <section className="booking-teaser section">
           <div className="shell booking-teaser-inner">
             <div>
-              <p className="eyebrow">Built for what’s next</p>
-              <h2>A future booking flow you can try today.</h2>
+              <p className="eyebrow">Reserve ahead</p>
+              <h2>Pick your time online. Walk in when you’re ready.</h2>
               <p>
-                Preview how customers could choose a time and review a wash. Accounts and payments
-                can connect after the owner approves the project.
+                Choose a time that works and reserve your tub in advance, or simply drop by whenever
+                it suits you.
               </p>
               <Link href="/book" className="button button-primary">
-                Walk through the demo <ArrowIcon />
+                Reserve a wash <ArrowIcon />
               </Link>
             </div>
             <div className="phone-preview" aria-hidden="true">
@@ -255,7 +253,7 @@ export default function Home() {
               </div>
               <div className="hours-note">
                 <ClockIcon />
-                <p><strong>Hours are being confirmed.</strong><span>Call ahead during this concept phase.</span></p>
+                <p><strong>Open daily 9am–7pm.</strong><span>Last wash starts 30 minutes before close.</span></p>
               </div>
             </div>
             <a className="map-card" href={site.directionsHref} target="_blank" rel="noreferrer" aria-label="Open Fresh Paws in Google Maps">
@@ -310,7 +308,7 @@ export default function Home() {
 
       <nav className="mobile-sticky" aria-label="Mobile actions">
         <a href={site.directionsHref} target="_blank" rel="noreferrer"><MapPinIcon /> Directions</a>
-        <Link href="/book">Booking demo <ArrowIcon /></Link>
+        <Link href="/book">Book a wash <ArrowIcon /></Link>
       </nav>
     </>
   );

@@ -19,9 +19,9 @@ export function SiteHeader() {
 
   return (
     <>
-      <aside className="concept-bar" aria-label="Concept website notice">
-        <span>Concept website</span>
-        <span className="concept-detail">Reservations and pricing are demo-only</span>
+      <aside className="concept-bar" aria-label="Notice">
+        <span>Now serving Sunnyside</span>
+        <span className="concept-detail">Walk-ins welcome · Reservations available online</span>
       </aside>
       <header className="site-header">
         <div className="shell header-inner">
@@ -49,7 +49,7 @@ export function SiteHeader() {
                   {link.label}
                 </Link>
               ))}
-              <Link href="/book" onClick={closeMenu}>Explore booking demo</Link>
+              <Link href="/book" onClick={closeMenu}>Book a wash</Link>
             </nav>
           </details>
         </div>

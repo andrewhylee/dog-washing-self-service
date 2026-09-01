@@ -17,8 +17,8 @@ const body = Public_Sans({
 export const metadata: Metadata = {
   title: "Fresh Paws Dog Wash | Sunnyside, Queens",
   description:
-    "A concept website for Fresh Paws, a self-service dog wash in Sunnyside, Queens.",
-  robots: { index: false, follow: false },
+    "Fresh Paws Dog Wash, a self-serve dog wash in Sunnyside, Queens. Book your wash online.",
+  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
@@ -30,9 +30,6 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
-      <head>
-        <link rel="preconnect" href="https://lh3.googleusercontent.com" crossOrigin="anonymous" />
-      </head>
       <body>
         <a className="skip-link" href="#main-content">Skip to main content</a>
         {children}
