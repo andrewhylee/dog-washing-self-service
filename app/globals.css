@@ -1263,6 +1263,9 @@ h3 {
 .service-choice small { margin-top: 5px; color: var(--navy-soft); font-size: 0.7rem; }
 .service-price { font-family: var(--font-display), sans-serif; font-size: 0.78rem; font-weight: 850; }
 .booking-button-row { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 10px; margin-top: 34px; }
+.booking-button-row .button-primary:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+.booking-fields input { margin-bottom: 22px; }
+.booking-fields input:last-of-type { margin-bottom: 0; }
 .button-ghost { border-color: var(--navy); background: transparent; color: var(--navy); }
 .booking-review { text-align: center; }
 .review-dog { width: 80px; height: 80px; display: grid; place-items: center; margin: 20px auto; border: 2px solid var(--navy); border-radius: 50%; background: var(--lime); font-size: 2rem; box-shadow: 5px 5px 0 var(--navy); }

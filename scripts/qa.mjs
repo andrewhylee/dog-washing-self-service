@@ -146,19 +146,27 @@ async function testBooking() {
   await page.getByRole("gridcell", { name: "Tue, Sep 1", exact: true }).click();
   await page.getByRole("button", { name: "11:00 AM" }).click();
   await page.getByRole("button", { name: /Continue/i }).click();
-  await expect("booking: dog step visible", await page.getByRole("heading", { name: /Who’s getting fresh/i }).isVisible());
-  await page.getByLabel(/Dog’s first name/i).fill("Mochi");
+  await expect("booking: details step visible", await page.getByRole("heading", { name: /Almost there/i }).isVisible());
+  await expect("booking: selection preserved", await page.getByText(/Sep 1, 11:00 AM/i).isVisible());
   await page.screenshot({
-    path: `${outputDir}/booking-mobile-step2-v2.png`,
+    path: `${outputDir}/booking-mobile-details-v2.png`,
     fullPage: true,
     style: ".skip-link { display: none !important; }",
   });
-  await page.getByRole("button", { name: /Review/i }).click();
-  await expect("booking: selection preserved", await page.getByText(/Sep 1, 11:00 AM/i).isVisible());
-  await expect("booking: dog name preserved", await page.getByText("Mochi", { exact: true }).isVisible());
-  await expect("booking: confirmation shown", await page.getByText(/hold your tub/i).isVisible());
+  const confirmButton = page.getByRole("button", { name: /Confirm booking/i });
+  await expect("booking: confirm disabled until contact details filled", await confirmButton.isDisabled());
+  await page.getByLabel(/First name/i).fill("Alex");
+  await page.getByLabel(/Last name/i).fill("Rivera");
+  await page.getByLabel(/Pet’s name/i).fill("Mochi");
+  await page.getByLabel(/Phone number/i).fill("555-123-4567");
+  await expect("booking: confirm still disabled with partial details", await confirmButton.isDisabled());
+  await page.getByLabel(/Email/i).fill("alex@example.com");
+  await expect("booking: confirm enabled when all details filled", await confirmButton.isEnabled());
+  await confirmButton.click();
+  await expect("booking: confirmation shown", await page.getByText(/Reservation confirmed/i).isVisible());
+  await expect("booking: hold tub message shown", await page.getByText(/hold your tub/i).isVisible());
   await page.screenshot({
-    path: `${outputDir}/booking-mobile-review-v2.png`,
+    path: `${outputDir}/booking-mobile-confirm-v2.png`,
     fullPage: true,
     style: ".skip-link { display: none !important; }",
   });

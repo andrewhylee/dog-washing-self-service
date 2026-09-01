@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowIcon, CheckIcon } from "@/components/icons";
+import { ArrowIcon } from "@/components/icons";
 
 const timeFormatter = new Intl.DateTimeFormat("en-US", {
   hour: "numeric",
@@ -10,9 +10,11 @@ const timeFormatter = new Intl.DateTimeFormat("en-US", {
   timeZone: "UTC",
 });
 
-const times = ["09:30", "10:15", "11:00", "12:30", "14:00", "15:45"].map((time) =>
-  timeFormatter.format(new Date(`2026-09-01T${time}:00Z`)),
-);
+const times = Array.from({ length: 16 }, (_, i) => {
+  const hour = 9 + Math.floor(i / 2);
+  const minute = i % 2 === 0 ? "00" : "30";
+  return timeFormatter.format(new Date(`2026-09-01T${String(hour).padStart(2, "0")}:${minute}:00Z`));
+});
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -38,7 +40,24 @@ export function BookingDemo() {
   const [viewMonth, setViewMonth] = useState<MonthKey>("current");
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState("");
-  const [dogName, setDogName] = useState("");
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    petName: "",
+    phone: "",
+    email: "",
+  });
+
+  const detailsComplete =
+    form.firstName.trim() !== "" &&
+    form.lastName.trim() !== "" &&
+    form.petName.trim() !== "" &&
+    form.phone.trim() !== "" &&
+    form.email.trim() !== "";
+
+  const setField = (field: keyof typeof form, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
 
   const today = startOfToday();
   const todayKey = toKey(today.getFullYear(), today.getMonth()) + "-" + String(today.getDate()).padStart(2, "0");
@@ -205,7 +224,7 @@ export function BookingDemo() {
             onClick={() => setStep(2)}
             disabled={!selectedDate || !selectedTime}
           >
-            Continue to dog details <ArrowIcon />
+            Continue to your details <ArrowIcon />
           </button>
         </div>
       )}
@@ -213,30 +232,74 @@ export function BookingDemo() {
       {step === 2 && (
         <div className="booking-step">
           <p className="step-label">Step 2 of 3</p>
-          <h2 id="booking-title">Who’s getting fresh?</h2>
-          <p className="booking-helper">{readableDate(selectedDate)}, {selectedTime}</p>
-          <label className="field-label" htmlFor="dog-name">Dog’s first name <span>optional</span></label>
-          <input
-            id="dog-name"
-            name="dog-name"
-            type="text"
-            value={dogName}
-            onChange={(event) => setDogName(event.target.value)}
-            placeholder="e.g. Mochi…"
-            maxLength={30}
-            autoComplete="off"
-          />
-          <div className="service-choice">
-            <span className="service-check"><CheckIcon /></span>
-            <div><strong>Self-serve wash</strong><small>Wash products, towels, dryers, grooming tools + fragrance</small></div>
-            <span className="service-price">$25</span>
-          </div>
-          <div className="booking-button-row">
-            <button type="button" className="button button-ghost" onClick={() => setStep(1)}>Back</button>
-            <button type="button" className="button button-primary" onClick={() => setStep(3)}>
-              Review <ArrowIcon />
-            </button>
-          </div>
+          <h2 id="booking-title">Almost there.</h2>
+          <p className="booking-helper">{readableDate(selectedDate)}, {selectedTime} · Self-serve wash</p>
+          <form onSubmit={(event) => { event.preventDefault(); setStep(3); }}>
+            <div className="booking-fields">
+              <label className="field-label" htmlFor="first-name">First name</label>
+              <input
+                id="first-name"
+                name="firstName"
+                type="text"
+                value={form.firstName}
+                onChange={(event) => setField("firstName", event.target.value)}
+                placeholder="e.g. Alex"
+                autoComplete="given-name"
+                required
+              />
+              <label className="field-label" htmlFor="last-name">Last name</label>
+              <input
+                id="last-name"
+                name="lastName"
+                type="text"
+                value={form.lastName}
+                onChange={(event) => setField("lastName", event.target.value)}
+                placeholder="e.g. Rivera"
+                autoComplete="family-name"
+                required
+              />
+              <label className="field-label" htmlFor="pet-name">Pet’s name</label>
+              <input
+                id="pet-name"
+                name="petName"
+                type="text"
+                value={form.petName}
+                onChange={(event) => setField("petName", event.target.value)}
+                placeholder="e.g. Mochi…"
+                maxLength={30}
+                autoComplete="off"
+                required
+              />
+              <label className="field-label" htmlFor="phone">Phone number</label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={form.phone}
+                onChange={(event) => setField("phone", event.target.value)}
+                placeholder="e.g. (555) 123-4567"
+                autoComplete="tel"
+                required
+              />
+              <label className="field-label" htmlFor="email">Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={(event) => setField("email", event.target.value)}
+                placeholder="e.g. alex@example.com"
+                autoComplete="email"
+                required
+              />
+            </div>
+            <div className="booking-button-row">
+              <button type="button" className="button button-ghost" onClick={() => setStep(1)}>Back</button>
+              <button type="submit" className="button button-primary" disabled={!detailsComplete}>
+                Confirm booking <ArrowIcon />
+              </button>
+            </div>
+          </form>
         </div>
       )}
 
@@ -246,17 +309,17 @@ export function BookingDemo() {
           <h2 id="booking-title">Looks fresh.</h2>
           <div className="review-dog" aria-hidden="true">🐾</div>
           <dl>
-            <div><dt>Guest</dt><dd>{dogName.trim() || "Your pup"}</dd></div>
+            <div><dt>Guest</dt><dd>{form.petName.trim()}</dd></div>
             <div><dt>Visit</dt><dd>{readableDate(selectedDate)}, {selectedTime}</dd></div>
             <div><dt>Service</dt><dd>Self-serve wash</dd></div>
             <div><dt>Payment</dt><dd>Pay in store</dd></div>
           </dl>
           <div className="demo-notice">
-            <strong>All set</strong>
+            <strong>Reservation confirmed</strong>
             <span>We’ll hold your tub and see you then.</span>
           </div>
           <div className="booking-button-row">
-            <button type="button" className="button button-ghost" onClick={() => setStep(2)}>Back</button>
+            <button type="button" className="button button-ghost" onClick={() => setStep(2)}>Edit details</button>
             <Link href="/" className="button button-primary">Return home <ArrowIcon /></Link>
           </div>
         </div>
