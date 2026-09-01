@@ -38,7 +38,7 @@ export default function Home() {
                   <MapPinIcon /> Get directions
                 </a>
               </div>
-              <p className="hero-note">Open daily · Walk-ins and reservations welcome</p>
+              <p className="hero-note">Open Mon–Fri 8am–7pm · Sat–Sun 9:30am–7pm · Walk-ins welcome</p>
             </div>
             <DogWashIllustration />
           </div>
@@ -95,7 +95,7 @@ export default function Home() {
               <h2>Just bring the dog.</h2>
               <p className="section-copy">
                 Everything you need for a full wash is provided on site — step right in and get
-                started, no supplies to bring along.
+                started, with no supplies to bring along and no cleanup to handle.
               </p>
               <ul className="check-list">
                 {included.map((item) => (
@@ -253,7 +253,7 @@ export default function Home() {
               </div>
               <div className="hours-note">
                 <ClockIcon />
-                <p><strong>Open daily 9am–7pm.</strong><span>Last wash starts 30 minutes before close.</span></p>
+                <p><strong>Mon–Fri 8am–7pm · Sat–Sun 9:30am–7pm.</strong><span>Walk-ins welcome — first come, first serve. Last wash starts 30 minutes before close.</span></p>
               </div>
             </div>
             <a className="map-card" href={site.directionsHref} target="_blank" rel="noreferrer" aria-label="Open Fresh Paws in Google Maps">

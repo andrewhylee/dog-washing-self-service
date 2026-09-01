@@ -228,7 +228,7 @@ export function BookingDemo() {
           />
           <div className="service-choice">
             <span className="service-check"><CheckIcon /></span>
-            <div><strong>Self-serve wash</strong><small>Wash products, towels, dryer + cleanup</small></div>
+            <div><strong>Self-serve wash</strong><small>Wash products, towels, dryers, grooming tools + fragrance</small></div>
             <span className="service-price">$25</span>
           </div>
           <div className="booking-button-row">

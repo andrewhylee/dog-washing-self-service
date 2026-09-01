@@ -21,7 +21,7 @@ export function SiteHeader() {
     <>
       <aside className="concept-bar" aria-label="Notice">
         <span>Now serving Sunnyside</span>
-        <span className="concept-detail">Walk-ins welcome · Reservations available online</span>
+        <span className="concept-detail">Walk-ins welcome, first come · Reserve online to hold a tub</span>
       </aside>
       <header className="site-header">
         <div className="shell header-inner">

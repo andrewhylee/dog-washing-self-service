@@ -18,8 +18,9 @@ export default function BookPage() {
           <p className="eyebrow">Online reservations</p>
           <h1>Pick a wash time.<br />Skip the guesswork.</h1>
           <p>
-            Reserve your tub online in just a few steps. Your details are stored securely and
-            nothing is charged until you arrive.
+            Reserve your tub online in just a few steps, or just walk in — we operate
+            first come, first serve, so no reservation is ever required. Your details are
+            stored securely and nothing is charged until you arrive.
           </p>
           <div className="booking-trust">
             <span>✓ Quick and easy booking</span>

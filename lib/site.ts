@@ -66,24 +66,25 @@ export const washSteps = [
 ] as const;
 
 export const included = [
-  "Raised wash station",
-  "Coat-friendly shampoo",
-  "Conditioner",
+  "Washing station",
+  "Shampoo + conditioner",
+  "Grooming tools",
   "Fresh towels",
   "Professional dryer",
-  "Apron + cleanup",
+  "Fragrance",
+  "Apron + no cleanup",
 ] as const;
 
 export const faqs = [
   {
     question: "Do I need to bring anything?",
     answer:
-      "Just your dog and their leash. Shampoo, conditioner, towels, and the dryer are all provided on site.",
+      "No. Washing stations, aprons, shampoo, conditioner, grooming tools, towels, dryers, and fragrance are all provided — with no cleanup required.",
   },
   {
     question: "Do I need a reservation?",
     answer:
-      "Reservations are recommended on weekends, but walk-ins are always welcome. You can book a time right on this site.",
+      "No. We operate on a first come, first serve walk-in basis, so you never need a booking. Reserve a time online if you’d like to hold a tub in advance.",
   },
   {
     question: "Can I wash a large dog?",
@@ -91,8 +92,23 @@ export const faqs = [
       "Yes. Our raised tubs fit dogs of all sizes, and the adjustable stations keep you comfortable while you wash.",
   },
   {
-    question: "How long does a wash take?",
+    question: "Is there a time limit?",
     answer:
-      "Most self-serve washes take about 30–45 minutes, including drying. You can take your time on the tub.",
+      "No wash limit. Take your time — most washes take about 30–45 minutes, including drying.",
+  },
+  {
+    question: "Are vaccine records required?",
+    answer:
+      "Yes. For the health and safety of all pets, proof of current Rabies, Distemper, and Bordetella vaccinations is required before your dog enters the facility.",
+  },
+  {
+    question: "What about sick pets?",
+    answer:
+      "Sick pets are not allowed in the facility until they’re feeling better. Thank you for helping us keep every dog safe.",
+  },
+  {
+    question: "Do you offer grooming?",
+    answer:
+      "We don’t currently offer grooming, but grooming tools are provided so you can finish your dog’s look after the wash.",
   },
 ] as const;

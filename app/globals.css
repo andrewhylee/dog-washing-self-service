@@ -153,72 +153,16 @@ svg {
   width: 45px;
   height: 45px;
   flex: 0 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.brand-face {
-  position: absolute;
-  z-index: 2;
-  inset: 8px 4px 3px;
-  border: 2px solid var(--navy);
-  border-radius: 50% 50% 46% 46%;
-  background: var(--lime);
+.brand-logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-
-.brand-ear {
-  position: absolute;
-  z-index: 1;
-  top: 4px;
-  width: 17px;
-  height: 25px;
-  border: 2px solid var(--navy);
-  background: var(--orange);
-}
-
-.brand-ear-left {
-  left: 2px;
-  border-radius: 14px 3px 10px 12px;
-  transform: rotate(-24deg);
-}
-
-.brand-ear-right {
-  right: 2px;
-  border-radius: 3px 14px 12px 10px;
-  transform: rotate(24deg);
-}
-
-.brand-eye {
-  position: absolute;
-  top: 10px;
-  width: 4px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--navy);
-}
-
-.brand-eye-left { left: 9px; }
-.brand-eye-right { right: 9px; }
-
-.brand-nose {
-  position: absolute;
-  top: 19px;
-  left: 50%;
-  width: 8px;
-  height: 6px;
-  border-radius: 50% 50% 60% 60%;
-  background: var(--navy);
-  transform: translateX(-50%);
-}
-
-.brand-bubble {
-  position: absolute;
-  z-index: 3;
-  border: 2px solid var(--teal);
-  border-radius: 50%;
-  background: var(--soap);
-}
-
-.brand-bubble-one { top: 0; right: -3px; width: 10px; height: 10px; }
-.brand-bubble-two { top: -4px; right: 8px; width: 6px; height: 6px; }
 
 .brand-copy {
   display: grid;
