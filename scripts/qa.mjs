@@ -54,7 +54,12 @@ async function inspectViewport(name, viewport) {
   await expect(`${name}: primary CTA stays inside hero`, dimensions.ctaBottom <= dimensions.heroBottom, JSON.stringify(dimensions));
 
   if (viewport.width < 768) {
-    await expect(`${name}: sticky action visible`, await page.locator(".mobile-sticky").isVisible());
+    await expect(`${name}: sticky hidden above the hero`, !(await page.locator(".mobile-sticky").isVisible()));
+    await page.locator(".hero-actions").evaluate((element) => {
+      window.scrollTo(0, element.getBoundingClientRect().bottom + window.scrollY + 1);
+    });
+    await page.locator(".mobile-sticky").waitFor({ state: "visible" });
+    await expect(`${name}: sticky appears after hero actions scroll past`, await page.locator(".mobile-sticky").isVisible());
     await page.locator(".mobile-menu summary").click();
     await expect(`${name}: menu opens`, await page.locator(".mobile-menu nav").isVisible());
     await page.getByRole("link", { name: "FAQ" }).click();

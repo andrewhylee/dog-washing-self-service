@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { DogWashIllustration } from "@/components/dog-wash-illustration";
+import { MobileStickyCta } from "@/components/mobile-cta";
 import { SiteHeader } from "@/components/site-header";
 import {
   ArrowIcon,
@@ -306,10 +307,7 @@ export default function Home() {
         </div>
       </footer>
 
-      <nav className="mobile-sticky" aria-label="Mobile actions">
-        <a href={site.directionsHref} target="_blank" rel="noreferrer"><MapPinIcon /> Directions</a>
-        <Link href="/book">Book a wash <ArrowIcon /></Link>
-      </nav>
+      <MobileStickyCta />
     </>
   );
 }

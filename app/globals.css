@@ -416,10 +416,17 @@ h3 {
 }
 
 .hero-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 24px;
+}
+
+.hero-actions .button { width: 100%; }
+
+.hero-actions .text-link {
+  min-height: 52px;
+  justify-self: center;
 }
 
 .text-link {
@@ -1190,6 +1197,18 @@ h3 {
   border-radius: 999px;
   background: var(--soap);
   box-shadow: 0 12px 35px rgba(20, 43, 59, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px);
+  pointer-events: none;
+  transition: opacity 250ms ease, transform 250ms ease, visibility 250ms ease;
+}
+
+.mobile-sticky.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
 }
 
 .mobile-sticky a { min-height: 55px; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 12px; font-size: 0.76rem; font-weight: 850; }
@@ -1278,6 +1297,8 @@ h3 {
 .demo-notice span { margin-top: 4px; font-size: 0.7rem; }
 
 @media (min-width: 700px) {
+  .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 24px; }
+  .hero-actions .text-link { min-height: 44px; }
   .shell { width: min(100% - 72px, 1180px); }
   .section { padding: 116px 0; }
   .hero { padding-top: 72px; }
@@ -1338,7 +1359,6 @@ h3 {
   .shell { width: min(100% - 28px, 1180px); }
   .brand-copy small { display: none; }
   .hero h1 { font-size: 3.45rem; }
-  .hero-actions .button { width: 100%; }
   .quick-facts > div { min-height: 94px; }
   .date-options { gap: 4px; }
   .booking-step { padding-inline: 17px; }
