@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import { DogWashIllustration } from "@/components/dog-wash-illustration";
 import { SiteHeader } from "@/components/site-header";
@@ -31,11 +30,11 @@ export default function Home() {
                 You bring the pup—we’ll set the stage.
               </p>
               <div className="hero-actions">
-                <Link href="/book" className="button button-primary">
-                  Book a wash <ArrowIcon />
-                </Link>
-                <a className="text-link" href={site.directionsHref} target="_blank" rel="noreferrer">
-                  <MapPinIcon /> Get directions
+                <a href={site.directionsHref} target="_blank" rel="noreferrer" className="button button-primary">
+                  Get directions <ArrowIcon />
+                </a>
+                <a className="text-link" href={site.phoneHref}>
+                  <PhoneIcon /> {site.phoneDisplay}
                 </a>
               </div>
               <p className="hero-note">Open Mon–Fri 8am–7pm · Sat–Sun 9:30am–7pm · Walk-ins welcome</p>
@@ -203,37 +202,10 @@ export default function Home() {
                 <li><CheckIcon /> Professional dryer</li>
                 <li><CheckIcon /> Cleanup handled</li>
               </ul>
-              <Link href="/book" className="button button-dark">
-                Book your wash <ArrowIcon />
-              </Link>
+              <a href={site.directionsHref} target="_blank" rel="noreferrer" className="button button-dark">
+                Get directions <ArrowIcon />
+              </a>
             </article>
-          </div>
-        </section>
-
-        <section className="booking-teaser section">
-          <div className="shell booking-teaser-inner">
-            <div>
-              <p className="eyebrow">Reserve ahead</p>
-              <h2>Pick your time online. Walk in when you’re ready.</h2>
-              <p>
-                Choose a time that works and reserve your tub in advance, or simply drop by whenever
-                it suits you.
-              </p>
-              <Link href="/book" className="button button-primary">
-                Reserve a wash <ArrowIcon />
-              </Link>
-            </div>
-            <div className="phone-preview" aria-hidden="true">
-              <div className="phone-speaker" />
-              <div className="phone-screen">
-                <span className="phone-logo">FP</span>
-                <p>Reserve a wash</p>
-                <strong>Pick a time that works.</strong>
-                <div className="mini-date-row"><i>MON</i><i className="active">TUE</i><i>WED</i></div>
-                <div className="mini-slots"><i>10:30</i><i>11:15</i><i>12:00</i><i>1:30</i></div>
-                <span className="mini-button">Continue</span>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -308,7 +280,7 @@ export default function Home() {
 
       <nav className="mobile-sticky" aria-label="Mobile actions">
         <a href={site.directionsHref} target="_blank" rel="noreferrer"><MapPinIcon /> Directions</a>
-        <Link href="/book">Book a wash <ArrowIcon /></Link>
+        <a href={site.phoneHref}><PhoneIcon /> Call</a>
       </nav>
     </>
   );

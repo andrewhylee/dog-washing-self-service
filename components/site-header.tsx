@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { BrandMark } from "@/components/brand";
 import { ArrowIcon } from "@/components/icons";
+import { site } from "@/lib/site";
 
 const links = [
   { href: "/#how-it-works", label: "How it works" },
@@ -21,7 +22,7 @@ export function SiteHeader() {
     <>
       <aside className="concept-bar" aria-label="Notice">
         <span>Now serving Sunnyside</span>
-        <span className="concept-detail">Walk-ins welcome, first come · Reserve online to hold a tub</span>
+        <span className="concept-detail">Walk-ins only · First come, first serve</span>
       </aside>
       <header className="site-header">
         <div className="shell header-inner">
@@ -35,9 +36,9 @@ export function SiteHeader() {
               </Link>
             ))}
           </nav>
-          <Link href="/book" className="button button-small header-cta">
-            Explore booking <ArrowIcon />
-          </Link>
+          <a href={site.directionsHref} target="_blank" rel="noreferrer" className="button button-small header-cta">
+            Get directions <ArrowIcon />
+          </a>
           <details className="mobile-menu" ref={menuRef}>
             <summary aria-label="Navigation menu">
               <span />
@@ -49,7 +50,9 @@ export function SiteHeader() {
                   {link.label}
                 </Link>
               ))}
-              <Link href="/book" onClick={closeMenu}>Book a wash</Link>
+              <a href={site.directionsHref} target="_blank" rel="noreferrer" onClick={closeMenu}>
+                Get directions
+              </a>
             </nav>
           </details>
         </div>

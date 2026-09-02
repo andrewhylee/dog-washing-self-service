@@ -84,7 +84,7 @@ export const faqs = [
   {
     question: "Do I need a reservation?",
     answer:
-      "No. We operate on a first come, first serve walk-in basis, so you never need a booking. Reserve a time online if you’d like to hold a tub in advance.",
+      "No. We’re walk-in only — first come, first serve, so there’s nothing to book or plan. Just stop by during open hours.",
   },
   {
     question: "Can I wash a large dog?",

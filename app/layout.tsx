@@ -17,7 +17,7 @@ const body = Public_Sans({
 export const metadata: Metadata = {
   title: "Fresh Paws Dog Wash | Sunnyside, Queens",
   description:
-    "Fresh Paws Dog Wash, a self-serve dog wash in Sunnyside, Queens. Book your wash online.",
+    "Fresh Paws Dog Wash, a self-serve dog wash in Sunnyside, Queens. Walk-ins welcome — first come, first serve.",
   robots: { index: true, follow: true },
 };
 
