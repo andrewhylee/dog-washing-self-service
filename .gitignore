@@ -35,6 +35,9 @@ yarn-error.log*
 # here.now deployment state
 .herenow/
 
+# local opencode config (commands/agents/skills live in ~/.config/opencode)
+/.opencode/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
