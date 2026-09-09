@@ -81,12 +81,7 @@ export const faqs = [
     answer:
       "No. Washing stations, aprons, shampoo, conditioner, grooming tools, towels, dryers, and fragrance are all provided — with no cleanup required.",
   },
-  {
-    question: "Do I need a reservation?",
-    answer:
-      "No. We operate on a first come, first serve walk-in basis, so you never need a booking. Reserve a time online if you’d like to hold a tub in advance.",
-  },
-  {
+{
     question: "Can I wash a large dog?",
     answer:
       "Yes. Our raised tubs fit dogs of all sizes, and the adjustable stations keep you comfortable while you wash.",

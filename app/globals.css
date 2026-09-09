@@ -261,12 +261,6 @@ svg {
   font-size: 0.8rem;
 }
 
-.header-cta {
-  display: none;
-  background: var(--navy);
-  color: white;
-}
-
 .mobile-menu {
   position: relative;
 }
@@ -424,11 +418,6 @@ h3 {
 
 .hero-actions .button { width: 100%; }
 
-.hero-actions .text-link {
-  min-height: 52px;
-  justify-self: center;
-}
-
 .text-link {
   min-height: 44px;
   display: inline-flex;
@@ -574,8 +563,7 @@ h3 {
 .section-heading h2,
 .pricing-copy h2,
 .included-card h2,
-.visit-copy h2,
-.booking-teaser h2 {
+.visit-copy h2 {
   margin-bottom: 22px;
   font-size: clamp(2.7rem, 11vw, 5.6rem);
 }
@@ -588,8 +576,7 @@ h3 {
 
 .split-heading > p,
 .pricing-copy > p,
-.section-copy,
-.booking-teaser-inner > div > p {
+.section-copy {
   max-width: 570px;
   color: var(--navy-soft);
   font-size: 1.03rem;
@@ -1061,70 +1048,6 @@ h3 {
 
 .button-dark { width: 100%; background: var(--navy); color: white; }
 
-.booking-teaser {
-  overflow: hidden;
-  background: var(--lime);
-}
-
-.booking-teaser-inner {
-  display: grid;
-  gap: 44px;
-}
-
-.booking-teaser-inner > div:first-child { align-self: center; }
-
-.phone-preview {
-  position: relative;
-  width: min(82%, 340px);
-  justify-self: center;
-  border: 7px solid var(--navy);
-  border-radius: 44px;
-  padding: 13px;
-  background: var(--navy);
-  box-shadow: 18px 20px 0 var(--teal);
-  transform: rotate(3deg);
-}
-
-.phone-speaker {
-  position: absolute;
-  z-index: 3;
-  top: 14px;
-  left: 50%;
-  width: 74px;
-  height: 22px;
-  border-radius: 999px;
-  background: var(--navy);
-  transform: translateX(-50%);
-}
-
-.phone-screen {
-  min-height: 560px;
-  border-radius: 30px;
-  padding: 56px 22px 22px;
-  background: var(--soap);
-}
-
-.phone-logo {
-  width: 45px;
-  height: 45px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--teal);
-  color: white;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-}
-
-.phone-screen p { margin: 26px 0 4px; color: var(--teal-dark); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
-.phone-screen > strong { display: block; max-width: 230px; font-family: var(--font-display), sans-serif; font-size: 1.7rem; line-height: 1.05; }
-.mini-date-row, .mini-slots { display: grid; gap: 7px; margin-top: 24px; }
-.mini-date-row { grid-template-columns: repeat(3, 1fr); }
-.mini-date-row i, .mini-slots i { display: grid; min-height: 48px; place-items: center; border: 1px solid var(--line); border-radius: 12px; font-size: 0.68rem; font-style: normal; font-weight: 800; }
-.mini-date-row i.active { border: 2px solid var(--navy); background: var(--lime); }
-.mini-slots { grid-template-columns: repeat(2, 1fr); }
-.mini-button { min-height: 50px; display: grid; place-items: center; margin-top: 24px; border-radius: 999px; background: var(--orange); font-size: 0.75rem; font-weight: 850; }
-
 .visit-section { background: var(--soap); }
 .visit-grid { display: grid; gap: 36px; }
 .visit-address { max-width: 430px; font-family: var(--font-display), sans-serif; font-size: 1.35rem; font-weight: 720; line-height: 1.25; }
@@ -1315,7 +1238,6 @@ h3 {
 
 @media (min-width: 700px) {
   .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 24px; }
-  .hero-actions .text-link { min-height: 44px; }
   .shell { width: min(100% - 72px, 1180px); }
   .section { padding: 116px 0; }
   .hero { padding-top: 72px; }
@@ -1331,7 +1253,7 @@ h3 {
   .bubble-route span:first-child { top: -13px; left: 15%; }
   .bubble-route span:nth-child(2) { top: -37px; left: 50%; width: 30px; height: 30px; }
   .bubble-route span:last-child { top: -7px; right: 13%; width: 15px; height: 15px; }
-  .included-grid, .pricing-grid, .visit-grid, .booking-teaser-inner { grid-template-columns: repeat(2, 1fr); align-items: stretch; }
+  .included-grid, .pricing-grid, .visit-grid { grid-template-columns: repeat(2, 1fr); align-items: stretch; }
   .proof-heading { grid-template-columns: 1fr auto; align-items: end; }
   .proof-showcase { grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr); align-items: start; }
   .listing-gallery { min-height: 680px; grid-template-columns: 1.12fr 0.88fr; grid-template-rows: repeat(2, 1fr); gap: 14px; }
@@ -1361,13 +1283,11 @@ h3 {
   .quick-facts { margin-top: 42px; }
   .wash-step { min-height: 260px; padding: 34px 30px; }
   .tile-panel { min-height: 650px; }
-  .booking-teaser-inner { grid-template-columns: 1fr 0.8fr; }
-  .phone-preview { width: 330px; }
   .booking-page-grid { grid-template-columns: 1fr minmax(440px, 520px); }
 }
 
 @media (min-width: 1080px) {
-  .desktop-nav, .header-cta { display: flex; }
+  .desktop-nav { display: flex; }
   .mobile-menu { display: none; }
 }
 

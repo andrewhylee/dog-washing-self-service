@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { ArrowIcon, MapPinIcon } from "@/components/icons";
+import { MapPinIcon, PhoneIcon } from "@/components/icons";
 import { site } from "@/lib/site";
 
 export function MobileStickyCta() {
@@ -30,9 +29,9 @@ export function MobileStickyCta() {
       <a href={site.directionsHref} target="_blank" rel="noreferrer">
         <MapPinIcon /> Directions
       </a>
-      <Link href="/book">
-        Book a wash <ArrowIcon />
-      </Link>
+      <a href={site.phoneHref}>
+        <PhoneIcon /> Call us
+      </a>
     </nav>
   );
 }
