@@ -1,0 +1,74 @@
+{
+  "collections": {
+    "bookings": {
+      "fields": {
+        "date": {
+          "type": "string",
+          "required": true,
+          "maxLength": 10
+        },
+        "time": {
+          "type": "string",
+          "required": true,
+          "maxLength": 10
+        },
+        "first_name": {
+          "type": "string",
+          "required": true,
+          "maxLength": 50,
+          "trim": true
+        },
+        "last_name": {
+          "type": "string",
+          "required": true,
+          "maxLength": 50,
+          "trim": true
+        },
+        "pet_name": {
+          "type": "string",
+          "required": true,
+          "maxLength": 30,
+          "trim": true
+        },
+        "phone": {
+          "type": "string",
+          "required": true,
+          "maxLength": 20,
+          "trim": true
+        },
+        "email": {
+          "type": "email",
+          "required": true
+        }
+      },
+      "access": {
+        "read": "owner",
+        "insert": "owner",
+        "update": "owner",
+        "delete": "owner"
+      },
+      "rateLimit": "10/hour/ip"
+    },
+    "availability": {
+      "fields": {
+        "date": {
+          "type": "string",
+          "required": true,
+          "maxLength": 10
+        },
+        "time": {
+          "type": "string",
+          "required": true,
+          "maxLength": 10
+        }
+      },
+      "access": {
+        "read": "public",
+        "insert": "public",
+        "update": "owner",
+        "delete": "owner"
+      },
+      "rateLimit": "30/hour/ip"
+    }
+  }
+}

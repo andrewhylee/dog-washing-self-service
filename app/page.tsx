@@ -59,65 +59,6 @@ export default function Home() {
           </section>
         </section>
 
-        <section className="wash-story section" id="how-it-works">
-          <div className="shell">
-            <div className="section-heading split-heading">
-              <div>
-                <p className="eyebrow eyebrow-dark">The clean routine</p>
-                <h2>Wash day, minus the ordeal.</h2>
-              </div>
-              <p>
-                Three honest steps. No wrestling with your home tub, improvising with old towels,
-                or cleaning the room after you clean the dog.
-              </p>
-            </div>
-            <div className="wash-steps">
-              <div className="bubble-route" aria-hidden="true">
-                <span /><span /><span />
-              </div>
-              {washSteps.map((step) => (
-                <article className="wash-step" key={step.number}>
-                  <span className="step-number">{step.number}</span>
-                  <div>
-                    <h3>{step.title}</h3>
-                    <p>{step.body}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="included-section section" id="included">
-          <div className="shell included-grid">
-            <div className="included-card">
-              <div className="included-sticker" aria-hidden="true">ALL<br />IN</div>
-              <p className="eyebrow">Travel light</p>
-              <h2>Just bring the dog.</h2>
-              <p className="section-copy">
-                Everything you need for a full wash is provided on site — step right in and get
-                started, with no supplies to bring along and no cleanup to handle.
-              </p>
-              <ul className="check-list">
-                {included.map((item) => (
-                  <li key={item}><CheckIcon /> {item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="tile-panel" aria-hidden="true">
-              <span className="tile-label">THE<br />GOOD<br />CLEAN</span>
-              <div className="tile-dog">
-                <span className="tile-ear left" />
-                <span className="tile-ear right" />
-                <span className="tile-head"><i /><i /><b /></span>
-              </div>
-              <span className="tile-bubble tile-bubble-a" />
-              <span className="tile-bubble tile-bubble-b" />
-              <span className="tile-bubble tile-bubble-c" />
-            </div>
-          </div>
-        </section>
-
         <section className="proof-section section" id="reviews">
           <div className="shell">
             <div className="proof-heading">
@@ -179,6 +120,65 @@ export default function Home() {
               Review excerpts and listing photos via{" "}
               <a href={site.googleListingHref} target="_blank" rel="noreferrer">Google Maps</a>.
             </p>
+          </div>
+        </section>
+
+        <section className="wash-story section" id="how-it-works">
+          <div className="shell">
+            <div className="section-heading split-heading">
+              <div>
+                <p className="eyebrow eyebrow-dark">The clean routine</p>
+                <h2>Wash day, minus the ordeal.</h2>
+              </div>
+              <p>
+                Three honest steps. No wrestling with your home tub, improvising with old towels,
+                or cleaning the room after you clean the dog.
+              </p>
+            </div>
+            <div className="wash-steps">
+              <div className="bubble-route" aria-hidden="true">
+                <span /><span /><span />
+              </div>
+              {washSteps.map((step) => (
+                <article className="wash-step" key={step.number}>
+                  <span className="step-number">{step.number}</span>
+                  <div>
+                    <h3>{step.title}</h3>
+                    <p>{step.body}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="included-section section" id="included">
+          <div className="shell included-grid">
+            <div className="included-card">
+              <div className="included-sticker" aria-hidden="true">ALL<br />IN</div>
+              <p className="eyebrow">Travel light</p>
+              <h2>Just bring the dog.</h2>
+              <p className="section-copy">
+                Everything you need for a full wash is provided on site — step right in and get
+                started, with no supplies to bring along and no cleanup to handle.
+              </p>
+              <ul className="check-list">
+                {included.map((item) => (
+                  <li key={item}><CheckIcon /> {item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="tile-panel" aria-hidden="true">
+              <span className="tile-label">THE<br />GOOD<br />CLEAN</span>
+              <div className="tile-dog">
+                <span className="tile-ear left" />
+                <span className="tile-ear right" />
+                <span className="tile-head"><i /><i /><b /></span>
+              </div>
+              <span className="tile-bubble tile-bubble-a" />
+              <span className="tile-bubble tile-bubble-b" />
+              <span className="tile-bubble tile-bubble-c" />
+            </div>
           </div>
         </section>
 

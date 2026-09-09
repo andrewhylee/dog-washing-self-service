@@ -597,7 +597,7 @@ h3 {
 
 .wash-story {
   position: relative;
-  background: var(--tub-blue);
+  background: var(--soap);
 }
 
 .wash-steps {
@@ -617,7 +617,7 @@ h3 {
   border: 2px solid var(--navy);
   border-radius: var(--radius-md);
   padding: 27px 24px;
-  background: var(--soap);
+  background: var(--tub-blue);
   box-shadow: 7px 7px 0 var(--navy);
 }
 
@@ -1267,6 +1267,11 @@ h3 {
 .calendar-empty { min-height: 40px; }
 
 .time-prompt { margin-bottom: 0; }
+.visiting-loading { display: flex; align-items: center; gap: 8px; font-weight: 760; color: var(--navy-soft); margin-bottom: 12px; }
+.visiting-loading::before { content: ""; width: 14px; height: 14px; border: 2px solid rgba(20,43,59,0.25); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.7s linear infinite; flex: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.time-skeleton { min-height: 48px; border-radius: 14px; background: linear-gradient(90deg, rgba(20,43,59,0.08) 25%, rgba(20,43,59,0.16) 50%, rgba(20,43,59,0.08) 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 .booking-selection { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 20px; border: 2px dashed rgba(20, 43, 59, 0.25); border-radius: 12px; padding: 12px 14px; }
 .booking-selection span { color: var(--navy-soft); font-size: 0.66rem; font-weight: 820; letter-spacing: 0.08em; text-transform: uppercase; }
 .booking-selection strong { font-size: 0.78rem; text-align: right; }
@@ -1276,6 +1281,7 @@ h3 {
 .booking-next { width: 100%; margin-top: 4px; }
 .field-label span { color: rgba(20, 43, 59, 0.5); font-weight: 500; }
 .booking-step input { width: 100%; min-height: 58px; border: 2px solid var(--navy); border-radius: 14px; padding: 12px 16px; background: white; color: var(--navy); font-size: 1rem; }
+.field-error { margin-top: 6px; color: var(--orange-dark); font-size: 0.76rem; font-weight: 700; }
 .service-choice { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; margin-top: 28px; border: 2px solid var(--navy); border-radius: 16px; padding: 16px; background: var(--tub-blue); }
 .service-check { align-self: start; }
 .service-choice > div { display: grid; line-height: 1.25; }
@@ -1283,6 +1289,17 @@ h3 {
 .service-price { font-family: var(--font-display), sans-serif; font-size: 0.78rem; font-weight: 850; }
 .booking-button-row { display: grid; grid-template-columns: 0.75fr 1.25fr; gap: 10px; margin-top: 34px; }
 .booking-button-row .button-primary:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+.time-options button.full { color: rgba(20, 43, 59, 0.4); background: rgba(20, 43, 59, 0.05); border-color: rgba(20, 43, 59, 0.1); cursor: not-allowed; }
+.time-options button.last-spot { border-color: rgba(7, 108, 112, 0.5); }
+.time-options button .slot-label { display: block; font-size: 0.58rem; font-weight: 760; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
+.time-options button.full .slot-label { color: var(--orange-dark); }
+.time-options button.last-spot .slot-label { color: var(--teal); }
+
+.slot-full-note { color: var(--orange-dark); font-weight: 700; }
+.slot-last-note { color: var(--teal); font-weight: 700; }
+
+.booking-error { margin-top: 14px; padding: 11px 14px; border: 2px solid rgba(217, 76, 34, 0.35); border-radius: 12px; background: rgba(255, 112, 67, 0.08); color: var(--orange-dark); font-size: 0.8rem; font-weight: 700; }
 .booking-fields input { margin-bottom: 22px; }
 .booking-fields input:last-of-type { margin-bottom: 0; }
 .button-ghost { border-color: var(--navy); background: transparent; color: var(--navy); }

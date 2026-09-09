@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowIcon } from "@/components/icons";
 
@@ -47,12 +47,45 @@ export function BookingDemo() {
     phone: "",
     email: "",
   });
+  const [bookings, setBookings] = useState<Array<{ date: string; time: string }>>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const TUB_CAPACITY = 2;
+
+  const fetchBookings = async () => {
+    const res = await fetch("/.herenow/data/availability?limit=100");
+    if (!res.ok) throw new Error("Failed to load availability");
+    const data = await res.json();
+    return (data.records ?? []).map(
+      (r: { data: { date: string; time: string } }) => r.data,
+    );
+  };
+
+  useEffect(() => {
+    fetchBookings()
+      .then((recs) => {
+        setBookings(recs);
+        setError(null);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Could not load live availability. Showing all times.");
+        setLoading(false);
+      });
+  }, []);
+
+  const slotCount = (date: string, time: string) =>
+    bookings.filter((b) => b.date === date && b.time === time).length;
+
+  const phoneValid = /^(\d{10}|\d{3}-\d{3}-\d{4})$/.test(form.phone.trim());
 
   const detailsComplete =
     form.firstName.trim() !== "" &&
     form.lastName.trim() !== "" &&
     form.petName.trim() !== "" &&
-    form.phone.trim() !== "" &&
+    phoneValid &&
     form.email.trim() !== "";
 
   const setField = (field: keyof typeof form, value: string) => {
@@ -80,7 +113,7 @@ export function BookingDemo() {
       key: toKey(d.getFullYear(), d.getMonth()),
       value: toKey(d.getFullYear(), d.getMonth()) + "-" + String(d.getDate()).padStart(2, "0"),
       day: d.getDate(),
-      disabled: d < today || d > lastDayOfNext,
+      disabled: d <= today || d > lastDayOfNext,
     };
   });
 
@@ -114,6 +147,52 @@ export function BookingDemo() {
       month: "short",
       day: "numeric",
     }).format(new Date(year, month - 1, day));
+  };
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    setError(null);
+    try {
+      const record = {
+        date: selectedDate,
+        time: selectedTime,
+        first_name: form.firstName.trim(),
+        last_name: form.lastName.trim(),
+        pet_name: form.petName.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+      };
+      const bookingRes = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(record),
+      });
+      if (!bookingRes.ok) {
+        const body = await bookingRes.json().catch(() => null);
+        throw new Error(body?.message ?? "Booking failed. Please try again.");
+      }
+      await fetch("/.herenow/data/availability", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": crypto.randomUUID(),
+        },
+        body: JSON.stringify({ date: selectedDate, time: selectedTime }),
+      }).catch(() => {});
+      setBookings((prev) => [...prev, { date: selectedDate, time: selectedTime }]);
+      fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: `**🐾 New Booking**\n\n🐕 **${form.petName.trim()}** — ${form.firstName.trim()} ${form.lastName.trim()}\n📅 ${readableDate(selectedDate)} at ${selectedTime}\n📞 ${form.phone.trim()}\n✉️ ${form.email.trim()}`,
+        }),
+      }).catch(() => {});
+      setStep(3);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Booking failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -197,19 +276,43 @@ export function BookingDemo() {
           <fieldset>
             <legend>Select a time</legend>
             {selectedDate ? (
-              <div className="time-options">
-                {times.map((time) => (
-                  <button
-                    type="button"
-                    key={time}
-                    className={selectedTime === time ? "selected" : ""}
-                    onClick={() => setSelectedTime(time)}
-                    aria-pressed={selectedTime === time}
-                  >
-                    {time}
-                  </button>
-                ))}
-              </div>
+              loading ? (
+                <div className="time-loading-block" aria-live="polite">
+                  <p className="booking-helper visiting-loading">Checking live availability…</p>
+                  <div className="time-options">
+                    {times.map((time) => (
+                      <span className="time-skeleton" key={time} aria-hidden="true" />
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="time-options">
+                  {times.map((time) => {
+                    const count = slotCount(selectedDate, time);
+                    const full = count >= TUB_CAPACITY;
+                    const lastSpot = count === TUB_CAPACITY - 1;
+                    return (
+                      <button
+                        type="button"
+                        key={time}
+                        className={[
+                          selectedTime === time ? "selected" : "",
+                          full ? "full" : "",
+                          lastSpot && !full ? "last-spot" : "",
+                        ].filter(Boolean).join(" ")}
+                        onClick={() => setSelectedTime(time)}
+                        disabled={full}
+                        aria-pressed={selectedTime === time}
+                        aria-label={`${time}${full ? ", fully booked" : lastSpot ? ", 1 spot left" : ", available"}`}
+                      >
+                        {time}
+                        {full && <span className="slot-label">Full</span>}
+                        {lastSpot && !full && <span className="slot-label">1 spot left</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              )
             ) : (
               <p className="booking-helper time-prompt">Choose a day above to see available times.</p>
             )}
@@ -218,11 +321,17 @@ export function BookingDemo() {
             <span>Selected</span>
             <strong>{selectedDate ? `${readableDate(selectedDate)}, ${selectedTime || "pick a time"}` : "No date chosen yet"}</strong>
           </div>
+          {!loading && selectedDate && selectedTime && (() => {
+            const count = slotCount(selectedDate, selectedTime);
+            if (count >= TUB_CAPACITY) return <p className="booking-helper slot-full-note">This time just filled up. Pick another.</p>;
+            if (count === TUB_CAPACITY - 1) return <p className="booking-helper slot-last-note">Only 1 of 2 tubs left at this time.</p>;
+            return null;
+          })()}
           <button
             type="button"
             className="button button-primary booking-next"
             onClick={() => setStep(2)}
-            disabled={!selectedDate || !selectedTime}
+            disabled={!selectedDate || !selectedTime || loading}
           >
             Continue to your details <ArrowIcon />
           </button>
@@ -234,7 +343,12 @@ export function BookingDemo() {
           <p className="step-label">Step 2 of 3</p>
           <h2 id="booking-title">Almost there.</h2>
           <p className="booking-helper">{readableDate(selectedDate)}, {selectedTime} · Self-serve wash</p>
-          <form onSubmit={(event) => { event.preventDefault(); setStep(3); }}>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void handleSubmit();
+            }}
+          >
             <div className="booking-fields">
               <label className="field-label" htmlFor="first-name">First name</label>
               <input
@@ -277,10 +391,16 @@ export function BookingDemo() {
                 type="tel"
                 value={form.phone}
                 onChange={(event) => setField("phone", event.target.value)}
-                placeholder="e.g. (555) 123-4567"
+                placeholder="e.g. 5551234567 or 555-123-4567"
                 autoComplete="tel"
                 required
+                aria-invalid={form.phone.trim() !== "" && !phoneValid}
               />
+              {form.phone.trim() !== "" && !phoneValid && (
+                <p className="field-error" role="alert">
+                  Enter 10 digits (e.g. 5551234567 or 555-123-4567).
+                </p>
+              )}
               <label className="field-label" htmlFor="email">Email</label>
               <input
                 id="email"
@@ -294,11 +414,12 @@ export function BookingDemo() {
               />
             </div>
             <div className="booking-button-row">
-              <button type="button" className="button button-ghost" onClick={() => setStep(1)}>Back</button>
-              <button type="submit" className="button button-primary" disabled={!detailsComplete}>
-                Confirm booking <ArrowIcon />
+              <button type="button" className="button button-ghost" onClick={() => setStep(1)} disabled={submitting}>Back</button>
+              <button type="submit" className="button button-primary" disabled={!detailsComplete || submitting}>
+                {submitting ? "Booking…" : "Confirm booking"} <ArrowIcon />
               </button>
             </div>
+            {error && <p className="booking-error" role="alert">{error}</p>}
           </form>
         </div>
       )}
