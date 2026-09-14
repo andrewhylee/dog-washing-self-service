@@ -94,7 +94,7 @@ export const faqs = [
   {
     question: "Are vaccine records required?",
     answer:
-      "Yes. For the health and safety of all pets, proof of current Rabies, Distemper, and Bordetella vaccinations is required before your dog enters the facility.",
+      "Yes. NYC Health Code requires proof of current Rabies, Distemper, and Bordetella vaccinations on file before your dog enters the facility. You can upload your pup’s vaccine card online before your visit — it takes about a minute, no account needed. Just look for the \u201cSkip the line at check-in\u201d section above, or bring the card when you come in.",
   },
   {
     question: "What about sick pets?",

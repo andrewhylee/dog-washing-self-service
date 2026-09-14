@@ -69,6 +69,63 @@
         "delete": "owner"
       },
       "rateLimit": "30/hour/ip"
+    },
+    "vaccine_records": {
+      "fields": {
+        "first_name": {
+          "type": "string",
+          "required": true,
+          "maxLength": 50,
+          "trim": true
+        },
+        "last_name": {
+          "type": "string",
+          "required": true,
+          "maxLength": 50,
+          "trim": true
+        },
+        "pet_name": {
+          "type": "string",
+          "required": true,
+          "maxLength": 30,
+          "trim": true
+        },
+        "phone": {
+          "type": "string",
+          "required": true,
+          "maxLength": 20,
+          "trim": true
+        },
+        "email": {
+          "type": "email",
+          "required": true
+        },
+        "card_url": {
+          "type": "string",
+          "required": false,
+          "maxLength": 500,
+          "trim": true
+        },
+        "file_name": {
+          "type": "string",
+          "required": true,
+          "maxLength": 200,
+          "trim": true
+        },
+        "uploaded_at": {
+          "type": "string",
+          "required": true,
+          "maxLength": 40,
+          "trim": true
+        }
+      },
+      "access": {
+        "read": "owner",
+        "insert": "owner",
+        "update": "owner",
+        "delete": "owner"
+      },
+      "rateLimit": "30/hour/ip"
     }
   }
 }

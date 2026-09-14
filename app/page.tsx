@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { DogWashIllustration } from "@/components/dog-wash-illustration";
 import { MobileStickyCta } from "@/components/mobile-cta";
 import { SiteHeader } from "@/components/site-header";
@@ -8,6 +9,7 @@ import {
   ClockIcon,
   MapPinIcon,
   PhoneIcon,
+  UploadIcon,
 } from "@/components/icons";
 import { faqs, googlePhotos, googleReviews, included, site, washSteps } from "@/lib/site";
 
@@ -28,29 +30,37 @@ export default function Home() {
               </h1>
               <p className="hero-lede">
                 A proper dog wash without the bathtub crouch, soaked towels, or bathroom cleanup.
-                You bring the pup—we’ll set the stage.
+                You bring the pup & vaccine card — we’ll set the stage.
               </p>
               <div className="hero-actions">
                 <a className="button button-primary" href={site.directionsHref} target="_blank" rel="noreferrer">
                   <MapPinIcon /> Get directions
                 </a>
+                <div className="hero-cta-row">
+                  <Link href="/vaccinations" className="button button-outline">
+                    <UploadIcon /> Upload vaccine card
+                  </Link>
+                  <a className="call-button" href={site.phoneHref} aria-label="Call the store" title="Call the store">
+                    <PhoneIcon />
+                  </a>
+                </div>
               </div>
-              <p className="hero-note">Open Mon–Fri 8am–7pm · Sat–Sun 9:30am–7pm · Walk-ins welcome</p>
+              <p className="hero-note">Open Mon–Fri 10am–7pm · Sat–Sun 9:30am–4pm · Walk-ins welcome</p>
             </div>
             <DogWashIllustration />
           </div>
           <section className="shell quick-facts" aria-label="Fresh Paws highlights">
             <div>
               <span className="fact-icon">01</span>
-              <p><strong>Everything included</strong><small>From shampoo to dryer</small></p>
+              <p><strong>Vaccine card? Easy.</strong><small>Upload online or bring it in</small></p>
             </div>
             <div>
               <span className="fact-icon">02</span>
-              <p><strong>Comfortable setup</strong><small>Save your back and bathroom</small></p>
+              <p><strong>Everything included</strong><small>From shampoo to dryer</small></p>
             </div>
             <div>
               <span className="fact-icon">03</span>
-              <p><strong>Right in Sunnyside</strong><small>44th Street, near Queens Blvd</small></p>
+              <p><strong>Comfortable setup</strong><small>Save your back and bathroom</small></p>
             </div>
           </section>
         </section>
@@ -207,6 +217,42 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="vaccine-section section" id="vaccines">
+          <div className="shell vaccine-grid">
+            <div className="vaccine-copy">
+              <p className="eyebrow">Pup paperwork, minus the paw-dragging</p>
+              <h2>Skip the line at check-in.</h2>
+              <p className="section-copy">
+                NYC law requires us to keep proof of vaccinations on file before your dog’s
+                first wash. Upload a photo or PDF of their vaccine card online before you come
+                by — it takes about a minute, and there’s no account needed.
+              </p>
+              <div className="vaccine-actions">
+                <Link href="/vaccinations" className="button button-lime">
+                  Upload vaccine records <ArrowIcon />
+                </Link>
+                <a href={site.phoneHref} className="button button-outline-light">
+                  <PhoneIcon /> Questions? Call us
+                </a>
+              </div>
+              <p className="vaccine-legalnote">
+                Walk-ins are always welcome — this just helps us be ready for your pup.
+              </p>
+            </div>
+            <aside className="vaccine-card" aria-label="What you’ll need to upload">
+              <span className="price-kicker">Have ready</span>
+              <h3>Just the vaccine card.</h3>
+              <ul className="check-list">
+                <li><CheckIcon /> Rabies</li>
+                <li><CheckIcon /> Distemper + Parvo</li>
+                <li><CheckIcon /> Bordetella</li>
+                <li><CheckIcon /> Photo or PDF of the card</li>
+              </ul>
+              <p className="vaccine-card-note">Upload once — we keep it on file for every visit.</p>
+            </aside>
+          </div>
+        </section>
+
         <section className="visit-section section" id="visit">
           <div className="shell visit-grid">
             <div className="visit-copy">
@@ -223,7 +269,7 @@ export default function Home() {
               </div>
               <div className="hours-note">
                 <ClockIcon />
-                <p><strong>Mon–Fri 8am–7pm · Sat–Sun 9:30am–7pm.</strong><span>Walk-ins welcome — first come, first serve. Last wash starts 30 minutes before close.</span></p>
+                <p><strong>Mon–Fri 10am–7pm · Sat–Sun 9:30am–4pm.</strong><span>Walk-ins welcome — first come, first serve. Last wash starts 30 minutes before close.</span></p>
               </div>
             </div>
             <a className="map-card" href={site.directionsHref} target="_blank" rel="noreferrer" aria-label="Open Fresh Paws in Google Maps">

@@ -41,3 +41,12 @@ export function ClockIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function UploadIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 16V5M7 10l5-5 5 5" />
+      <path d="M4 20h16" />
+    </svg>
+  );
+}

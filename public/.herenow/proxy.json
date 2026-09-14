@@ -1,5 +1,23 @@
 {
   "proxies": {
+    "/api/upload": {
+      "upstream": "https://api.cloudinary.com/v1_1/zjq8kp0w/image/upload",
+      "method": "POST",
+      "rateLimit": "30/hour/ip"
+    },
+    "/api/discord": {
+      "upstream": "https://discord.com/api/webhooks/1544739640937025577/XK0oxml8udKem1Pm68P9HAon48V6kL0-1B4qN1UxaZjaEb5HqOknqszKJLnDKsEicaih",
+      "method": "POST",
+      "rateLimit": "30/hour/ip"
+    },
+    "/api/vaccine": {
+      "upstream": "https://here.now/api/v1/publishes/mystic-lagoon-2g3s/data/vaccine_records",
+      "method": "POST",
+      "headers": {
+        "Authorization": "Bearer ${HERENOW_API_KEY}"
+      },
+      "rateLimit": "30/hour/ip"
+    },
     "/api/bookings": {
       "upstream": "https://here.now/api/v1/publishes/mystic-lagoon-2g3s/data/bookings",
       "method": "POST",

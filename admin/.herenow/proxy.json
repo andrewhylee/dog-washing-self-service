@@ -1,0 +1,20 @@
+{
+  "proxies": {
+    "/api/vaccine-records": {
+      "upstream": "https://here.now/api/v1/publishes/mystic-lagoon-2g3s/data/vaccine_records",
+      "method": "GET",
+      "headers": {
+        "Authorization": "Bearer ${ADMIN_RECORDS_KEY}"
+      },
+      "rateLimit": "30/hour/ip"
+    },
+    "/api/vaccine-records/*": {
+      "upstream": "https://here.now/api/v1/publishes/mystic-lagoon-2g3s/data/vaccine_records",
+      "method": "DELETE",
+      "headers": {
+        "Authorization": "Bearer ${ADMIN_RECORDS_KEY}"
+      },
+      "rateLimit": "30/hour/ip"
+    }
+  }
+}

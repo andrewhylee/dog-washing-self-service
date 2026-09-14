@@ -69,3 +69,24 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - Verified end-to-end earlier: availability returns 200, bookings unauthenticated GET → 403, `/api/bookings` proxy created + deleted a test record, `/api/notify` → Discord 204. `HERENOW_API_KEY` account variable exists (`7001555d...e4d2`).
 - **Pending (owner, out of agent scope)**: do one real browser booking on the live site to confirm the Discord notification lands.
 - QA test may need the stale date / phone format check revisited.
+## Owner admin site (vaccine records) — Next.js app in `admin/`
+- **Admin URL**: https://eternal-arbor-vra2.here.now/ (password-protected).
+- **Architecture**: a SECOND Next.js static-export app living at `admin/` in the same repo (own `app/`, `next.config.mjs` with `output:"export", trailingSlash:true, distDir:"out"`, `tsconfig.json`). Built with `next build admin` (CLI supports a directory arg), output is `admin/out/`. Legacy plain-static `admin-site/` was deleted after the migration was verified. Root `tsconfig.json` excludes `admin/**`; eslint still lints it (add `admin/.next/**`/`admin/out/**` to ignores — done).
+- **Purpose**: lets the owner VIEW + DELETE submitted vaccine records without exposing owner-only data on the public site. Decided after proving the public-site approach impossible (here.now proxy does NOT forward client-supplied `Authorization`; injected key would make reads public).
+- **Security model**: site password gate covers BOTH the page and the `/api/*` proxy routes (verified: anonymous root + api → 401 Protected wall; after gate login cookie → data OK). Proxy manifest injects account variable `ADMIN_RECORDS_KEY` server-side (`allowedUpstreams: ["here.now"]`), value = dedicated revocable key at `~/.herenow/site-admin-records-key`.
+- **Admin build/publish flow**:
+  ```
+  npm run lint && npm run build:admin        # builds admin/out + copies admin/.herenow/proxy.json into out/.herenow/
+  npm run publish:admin                      # publishes admin/out → eternal-arbor-vra2 (uses --overwrite for updates)
+  npm run qa:admin                           # headless Playwright e2e (anonymous gate → login → rows/search/sort/refresh)
+  npm run dev:admin                          # next dev admin -p 4173 (data won't load: proxy/gate exist only on here.now)
+  ```
+  Republish with `--overwrite` while iterating; once files stabilize, drop it.
+- **Proxy routes** (`admin/.herenow/proxy.json`): `GET /api/vaccine-records` → injects `Bearer ${ADMIN_RECORDS_KEY}`, rateLimit `30/hour/ip`; `DELETE /api/vaccine-records/*` → injects same, upstream WITHOUT trailing `/*` (verified working).
+- **Response shape (learned live)**: list = `{"records":[{"id":"rec_...","data":{...fields...}},...]}` — fields nested under `data`; flattening lives in `admin/app/records.ts` (pure, exported).
+- **Dashboard**: `admin/app/dashboard.tsx` client component — table (Pet thumb + name/file, Owner, Contact, sortable Uploaded header w/ aria-sort, Open card, Delete w/ confirm), search by owner/pet/phone/email, skeleton loading, subtle `#loadError`-style `.state-box.note`, empty/empty-search states, database-icon brand header, Refresh button. Loading fetch deferred via `setTimeout(...,0)` to satisfy `react-hooks/set-state-in-effect`.
+- **Temp site password `testing111`** (user set so agent can verify). `~/.herenow/site-admin-password` currently holds a STALE old password — refresh it if you change the real password. CHANGE THE PASSWORD BACK to a real one before handing off!
+- To change password: `PATCH https://here.now/api/v1/publish/eternal-arbor-vra2/metadata` with `{"password":"..."}` + `Authorization: Bearer $(cat ~/.herenow/credentials)`. Password changes revoke existing sessions.
+- Live admin version: `01M2GKCWRYQAZY032MWFC8CJFW` (18/18 e2e checks green). Records currently: 3 (mew/Johnny Bravo, ppo/pp, Meow/Joe Smoe added 2026-09-11) — real data, do NOT delete.
+- Gate login brute-force: repeated failed POSTs trigger a cooldown (~5 min) even for the right password — wait it out, don't hammer.
+- Caching: here.now static assets `cache-control: public, max-age=3600, stale-while-revalidate=86400`; Next hashed `_next` chunk names + `no-cache` index.html make stale-asset issues moot (the old static site needed manual `?v=` busting; that's gone now).

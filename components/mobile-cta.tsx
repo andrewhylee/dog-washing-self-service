@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MapPinIcon, PhoneIcon } from "@/components/icons";
+import Link from "next/link";
+import { MapPinIcon, UploadIcon } from "@/components/icons";
 import { site } from "@/lib/site";
 
 export function MobileStickyCta() {
@@ -26,11 +27,11 @@ export function MobileStickyCta() {
       aria-label="Mobile actions"
       aria-hidden={!visible}
     >
+      <Link href="/vaccinations" className="vaccine-link">
+        <UploadIcon /> Vaccine card
+      </Link>
       <a href={site.directionsHref} target="_blank" rel="noreferrer">
         <MapPinIcon /> Directions
-      </a>
-      <a href={site.phoneHref}>
-        <PhoneIcon /> Call us
       </a>
     </nav>
   );
