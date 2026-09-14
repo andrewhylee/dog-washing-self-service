@@ -185,7 +185,7 @@ export default function Dashboard() {
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch("/api/vaccine-records");
+      const res = await fetch("api/vaccine-records");
       if (res.status === 401 || res.status === 403) {
         setError("Your session expired — reload the page to re-enter the password.");
         return;
@@ -239,7 +239,7 @@ export default function Dashboard() {
       if (!window.confirm(`Delete this vaccination record${who}? This cannot be undone.`)) return;
       setDeleting(item.id);
       try {
-        const res = await fetch(`/api/vaccine-records/${encodeURIComponent(item.id)}`, { method: "DELETE" });
+        const res = await fetch(`api/vaccine-records/${encodeURIComponent(item.id)}`, { method: "DELETE" });
         if (res.status === 401 || res.status === 403) {
           setError("Delete denied — reload the page and try again.");
           return;

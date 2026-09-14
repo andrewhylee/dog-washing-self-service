@@ -37,13 +37,14 @@ note("title after login", (await page.title()).includes("Vaccine Records"));
 note("topbar brand visible", (await page.locator(".brand-name").textContent()) === "Fresh Paws");
 note("owner badge visible", (await page.locator(".owner-badge").textContent()) === "Owner view");
 
-await page.waitForSelector("tbody tr.skeleton", { state: "detached", timeout: 15000 });
-const rowCount = await page.locator("tbody tr:not(.skeleton)").count();
-note("records rendered", rowCount === 3, `rows=${rowCount}`);
+// count is dynamic — records can be added/deleted via the live form/admin
+await page.waitForSelector("tbody tr:not(.skeleton)", { timeout: 15000 });
+const N = await page.locator("tbody tr:not(.skeleton)").count();
+note("records rendered", N > 0, `rows=${N}`);
 note("no visible state boxes", (await page.locator(".state-box:visible").count()) === 0);
-note("count text", (await page.locator(".count").textContent()).includes("3 of 3"));
-note("thumbs rendered", (await page.locator("tbody img.thumb").count()) === 3);
-note("open-card links", (await page.locator("tbody .open-link[href]").count()) === 3);
+note("count text", (await page.locator(".count").textContent()).includes(`${N} of ${N}`));
+note("thumbs rendered", (await page.locator("tbody img.thumb").count()) === N);
+note("open-card links", (await page.locator("tbody .open-link[href]").count()) === N);
 note("sort default desc", (await page.locator("th[aria-sort]").getAttribute("aria-sort")) === "descending");
 await page.screenshot({ path: "/tmp/admin_next_loaded.png", fullPage: true });
 
@@ -53,25 +54,27 @@ await dateHeader.click();
 note("sort toggles to ascending", (await dateHeader.getAttribute("aria-sort")) === "ascending");
 await dateHeader.click();
 
-// search
+// search: pick the first record's pet name (fallback: owner) as a unique needle
+const firstPet = (await page.locator("tbody tr:not(.skeleton) .pet-name").first().textContent()) ?? "";
+const searchToken = (firstPet && firstPet !== "Unnamed pup" ? firstPet : (await page.locator("tbody tr:not(.skeleton) .owner-cell").first().textContent()) ?? "").trim();
 const search = page.locator('input[type="search"]');
-await search.fill("Meow");
+await search.fill(searchToken);
 await waitRowCount(page, 1);
-note("search filters to 1 row", true);
-await search.fill("zzzz-nothing");
+note(`search filters to 1 row ("${searchToken}")`, true);
+await search.fill("zzzz-no-match-xyz");
 await waitRowCount(page, 0);
 note(
   "empty-search state shows",
   (await page.locator(".state-box.empty:visible").textContent()).includes("No records match")
 );
 await search.fill("");
-await waitRowCount(page, 3);
+await waitRowCount(page, N);
 note("cleared search restores rows", true);
 
 // delete + refresh buttons present
-note("delete buttons present", (await page.locator(".del-btn").count()) === 3);
+note("delete buttons present", (await page.locator(".del-btn").count()) === N);
 await page.locator(".btn").click();
-await waitRowCount(page, 3, 15000);
+await waitRowCount(page, N, 15000);
 note("refresh re-renders records", true);
 
 note("no console/page errors after login", errors.length === 0, errors.join(" | "));
@@ -80,7 +83,7 @@ note("no console/page errors after login", errors.length === 0, errors.join(" | 
 await page.setViewportSize({ width: 375, height: 720 });
 await page.reload();
 await page.waitForLoadState("networkidle");
-await waitRowCount(page, 3);
+await waitRowCount(page, N);
 const overflow = await page.evaluate(
   () => document.documentElement.scrollWidth > window.innerWidth
 );
@@ -94,6 +97,36 @@ note("mobile: no horizontal overflow (table not cut off)", !overflow);
 note("mobile: thead hidden", theadDisplay === "none");
 note("mobile: rows render as grid cards", trDisplay === "grid", `display=${trDisplay}`);
 await page.screenshot({ path: "/tmp/admin_mobile.png", fullPage: true });
+await page.close();
+
+// --- custom domain mount: https://studiomuni.com/admin/ ---
+const CD = "https://studiomuni.com/admin/";
+const page2 = await browser.newPage();
+const cdStatus = {};
+page2.on("response", (r) => {
+  if (r.url().startsWith("https://studiomuni.com/admin/_next/")) cdStatus["asset"] = Math.max(cdStatus["asset"] ?? 0, r.status());
+  if (r.url() === "https://studiomuni.com/admin/api/vaccine-records") cdStatus["api"] = r.status();
+});
+const cdErrors = [];
+page2.on("pageerror", (e) => cdErrors.push("pageerror: " + e.message));
+page2.on("console", (m) => {
+  if (m.type() === "error" && !m.text().includes("Failed to load resource")) cdErrors.push("console.error: " + m.text());
+});
+await page2.goto(CD, { waitUntil: "networkidle" });
+note("custom domain shows gate title", (await page2.title()).includes("Protected"));
+const pw2 = page2.locator('input[name="password"]');
+note("custom domain password field present", (await pw2.count()) === 1);
+await pw2.fill("testing111");
+await page2.locator('button[type="submit"]').click();
+await page2.waitForLoadState("networkidle");
+await page2.waitForSelector("tbody tr:not(.skeleton)", { timeout: 15000 });
+const cdRows = await page2.locator("tbody tr:not(.skeleton)").count();
+note("custom domain records render", cdRows > 0, `rows=${cdRows}`);
+note("custom domain relative assets served from mount", cdStatus["asset"] === 200, `asset=${cdStatus["asset"]}`);
+note("custom domain api proxied under mount", cdStatus["api"] === 200, `api=${cdStatus["api"]}`);
+note("custom domain no page errors", cdErrors.length === 0, cdErrors.join(" | "));
+await page2.screenshot({ path: "/tmp/admin_custom_domain.png", fullPage: true });
+await page2.close();
 
 await browser.close();
 console.log(results.join("\n"));

@@ -4,7 +4,7 @@ Handoff notes so a new session can resume work quickly. All known state is captu
 
 ## Project
 - Next.js 16 static export (`output: "export"`) site for Fresh Paws self-serve dog wash, hosted on here.now.
-- Site slug: `mystic-lagoon-2g3s`; live URL: **https://mystic-lagoon-2g3s.here.now** (booking page: `/book`)
+- Site slug: `mystic-lagoon-2g3s`; live URL: **https://mystic-lagoon-2g3s.here.now** (booking page: `/book`). Also mounted at the root of **https://studiomuni.com/** (mount_path "" → slug `mystic-lagoon-2g3s`); the admin dashboard is mounted at `studiomuni.com/admin/` → slug `eternal-arbor-vra2`.
 - Publish config in `.herenow/state.json` (`auth_mode=authenticated`, `persistence=permanent`).
 - Regenerate + republish flow after edits:
   ```
@@ -70,7 +70,8 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - **Pending (owner, out of agent scope)**: do one real browser booking on the live site to confirm the Discord notification lands.
 - QA test may need the stale date / phone format check revisited.
 ## Owner admin site (vaccine records) — Next.js app in `admin/`
-- **Admin URL**: https://eternal-arbor-vra2.here.now/ (password-protected).
+- **Canonical URL**: **https://studiomuni.com/admin/** (custom-domain mount: `studiomuni.com` → `admin` mount → slug `eternal-arbor-vra2`). The old `https://eternal-arbor-vra2.here.now/` now 308-redirects here (set via `PUT /api/v1/publish/eternal-arbor-vra2/primary-domain {"domain":"studiomuni.com"}`; synced:true).
+- **Serving under a sub-path**: built with `basePath: "/admin"` (admin/next.config.mjs). Do NOT "relativize" asset URLs by hand — Next/Turbopack module keys must stay absolute and consistent; the framework handles the `/admin` prefix. Keep the dashboard's data fetches RELATIVE (`fetch("api/vaccine-records")` — no leading slash) so they resolve under the mount (`studiomuni.com/admin/api/vaccine-records`) and at a root-host alike.
 - **Architecture**: a SECOND Next.js static-export app living at `admin/` in the same repo (own `app/`, `next.config.mjs` with `output:"export", trailingSlash:true, distDir:"out"`, `tsconfig.json`). Built with `next build admin` (CLI supports a directory arg), output is `admin/out/`. Legacy plain-static `admin-site/` was deleted after the migration was verified. Root `tsconfig.json` excludes `admin/**`; eslint still lints it (add `admin/.next/**`/`admin/out/**` to ignores — done).
 - **Purpose**: lets the owner VIEW + DELETE submitted vaccine records without exposing owner-only data on the public site. Decided after proving the public-site approach impossible (here.now proxy does NOT forward client-supplied `Authorization`; injected key would make reads public).
 - **Security model**: site password gate covers BOTH the page and the `/api/*` proxy routes (verified: anonymous root + api → 401 Protected wall; after gate login cookie → data OK). Proxy manifest injects account variable `ADMIN_RECORDS_KEY` server-side (`allowedUpstreams: ["here.now"]`), value = dedicated revocable key at `~/.herenow/site-admin-records-key`.
@@ -78,15 +79,15 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
   ```
   npm run lint && npm run build:admin        # builds admin/out + copies admin/.herenow/proxy.json into out/.herenow/
   npm run publish:admin                      # publishes admin/out → eternal-arbor-vra2 (uses --overwrite for updates)
-  npm run qa:admin                           # headless Playwright e2e (anonymous gate → login → rows/search/sort/refresh)
+  npm run qa:admin                           # headless Playwright e2e (here.now 308 + custom domain mount, login, rows/search/sort/refresh, mobile overflow)
   npm run dev:admin                          # next dev admin -p 4173 (data won't load: proxy/gate exist only on here.now)
   ```
   Republish with `--overwrite` while iterating; once files stabilize, drop it.
-- **Proxy routes** (`admin/.herenow/proxy.json`): `GET /api/vaccine-records` → injects `Bearer ${ADMIN_RECORDS_KEY}`, rateLimit `30/hour/ip`; `DELETE /api/vaccine-records/*` → injects same, upstream WITHOUT trailing `/*` (verified working).
+- **Proxy routes** (`admin/.herenow/proxy.json`): `GET /api/vaccine-records` → injects `Bearer ${ADMIN_RECORDS_KEY}`, rateLimit `30/hour/ip`; `DELETE /api/vaccine-records/*` → injects same, upstream WITHOUT trailing `/*` (verified working). Under the mount these answer at `/admin/api/vaccine-records`.
 - **Response shape (learned live)**: list = `{"records":[{"id":"rec_...","data":{...fields...}},...]}` — fields nested under `data`; flattening lives in `admin/app/records.ts` (pure, exported).
-- **Dashboard**: `admin/app/dashboard.tsx` client component — table (Pet thumb + name/file, Owner, Contact, sortable Uploaded header w/ aria-sort, Open card, Delete w/ confirm), search by owner/pet/phone/email, skeleton loading, subtle `#loadError`-style `.state-box.note`, empty/empty-search states, database-icon brand header, Refresh button. Loading fetch deferred via `setTimeout(...,0)` to satisfy `react-hooks/set-state-in-effect`.
+- **Dashboard**: `admin/app/dashboard.tsx` client component — table (Pet thumb + name/file, Owner, Contact, sortable Uploaded header w/ aria-sort, Open card, Delete w/ confirm), search by owner/pet/phone/email, skeleton loading, subtle `.state-box.note`, empty/empty-search states, database-icon brand header + favicon (app/icon.png), Refresh button. ≤760px the wide table becomes stacked per-record cards (no horizontal scroll). Loading fetch deferred via `setTimeout(...,0)` to satisfy `react-hooks/set-state-in-effect`.
 - **Temp site password `testing111`** (user set so agent can verify). `~/.herenow/site-admin-password` currently holds a STALE old password — refresh it if you change the real password. CHANGE THE PASSWORD BACK to a real one before handing off!
 - To change password: `PATCH https://here.now/api/v1/publish/eternal-arbor-vra2/metadata` with `{"password":"..."}` + `Authorization: Bearer $(cat ~/.herenow/credentials)`. Password changes revoke existing sessions.
-- Live admin version: `01M2GKCWRYQAZY032MWFC8CJFW` (18/18 e2e checks green). Records currently: 3 (mew/Johnny Bravo, ppo/pp, Meow/Joe Smoe added 2026-09-11) — real data, do NOT delete.
+- Records currently: 2 (mew/Johnny Bravo, ppo/pp) — real data, do NOT delete.
 - Gate login brute-force: repeated failed POSTs trigger a cooldown (~5 min) even for the right password — wait it out, don't hammer.
-- Caching: here.now static assets `cache-control: public, max-age=3600, stale-while-revalidate=86400`; Next hashed `_next` chunk names + `no-cache` index.html make stale-asset issues moot (the old static site needed manual `?v=` busting; that's gone now).
+- Caching: here.now static assets `cache-control: public, max-age=3600, stale-while-revalidate=86400`; Next hashed `_next` chunk names + `no-cache` index.html make stale-asset issues moot.
