@@ -1,6 +1,6 @@
 {
   "proxies": {
-    "/api/vaccine-photo/*": {
+    "/api/vaccine-photo": {
       "upstream": "https://api.cloudinary.com/v1_1/zjq8kp0w/resources/image/upload",
       "method": "DELETE",
       "headers": {

@@ -245,7 +245,11 @@ export default function Dashboard() {
         const publicId = publicIdFromUrl(item.url);
         if (publicId) {
           try {
-            await fetch(`api/vaccine-photo/${encodeURIComponent(publicId)}`, { method: "DELETE" });
+            await fetch("api/vaccine-photo", {
+              method: "DELETE",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: `public_ids[]=${encodeURIComponent(publicId)}`,
+            });
           } catch {
             // Photo deletion is best effort; the record delete below still runs.
           }

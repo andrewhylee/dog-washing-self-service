@@ -184,9 +184,12 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - **Proxy routes** (`admin/.herenow/proxy.json`, upstreams point at the public slug `liminal-realm-qvmd`):
   `GET /api/vaccine-records` → injects `Bearer ${ADMIN_RECORDS_KEY}`, rateLimit `30/hour/ip`;
   `DELETE /api/vaccine-records/*` → injects same, upstream WITHOUT trailing `/*` (verified working);
-  `DELETE /api/vaccine-photo/*` → Cloudinary Admin API single-asset delete, header
-  `Authorization: ${CLOUDINARY_ADMIN_AUTH}` (value = `Basic base64(api_key:api_secret)`, server-side
-  variable pinned to `api.cloudinary.com`; secret NEVER in repo/chat — owner set it via direct API call).
+  `DELETE /api/vaccine-photo` (no wildcard) → Cloudinary Admin API `DELETE .../resources/image/upload`
+  with `public_ids[]` in the urlencoded body (Admin API takes IDs as PARAMS — there is NO `/:public_id`
+  path form; first attempt used it and silently deleted nothing), header `Authorization:
+  ${CLOUDINARY_ADMIN_AUTH}` (value = `Basic base64(api_key:api_secret)`, server-side variable pinned to
+  `api.cloudinary.com`; secret NEVER in repo/chat — owner set it via direct API call). DELETE-with-body
+  forwarding through the proxy verified live (`{"deleted":{...}}`).
 - **Dashboard Delete = record + photo.** `deleteRecord` parses the Cloudinary `public_id` from `card_url`
   (`publicIdFromUrl` in `records.ts`, unit-tested incl. transformed URLs), DELETEs the photo first
   (best effort: unparseable URLs / already-gone photos skip silently), then DELETEs the record. Works for
