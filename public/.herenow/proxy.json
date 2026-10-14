@@ -11,7 +11,7 @@
       "rateLimit": "30/hour/ip"
     },
     "/api/vaccine": {
-      "upstream": "https://here.now/api/v1/publishes/mystic-lagoon-2g3s/data/vaccine_records",
+      "upstream": "https://here.now/api/v1/publishes/liminal-realm-qvmd/data/vaccine_records",
       "method": "POST",
       "headers": {
         "Authorization": "Bearer ${HERENOW_API_KEY}"
@@ -19,7 +19,7 @@
       "rateLimit": "30/hour/ip"
     },
     "/api/bookings": {
-      "upstream": "https://here.now/api/v1/publishes/mystic-lagoon-2g3s/data/bookings",
+      "upstream": "https://here.now/api/v1/publishes/liminal-realm-qvmd/data/bookings",
       "method": "POST",
       "headers": {
         "Authorization": "Bearer ${HERENOW_API_KEY}"

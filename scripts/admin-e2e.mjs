@@ -1,6 +1,6 @@
 import { chromium } from "playwright";
 
-const BASE = "https://eternal-arbor-vra2.here.now/";
+const BASE = "https://dewy-sketch-h6k7.here.now/";
 const results = [];
 const note = (label, ok, extra = "") => {
   results.push(`${ok ? "PASS" : "FAIL"}  ${label}${extra ? "  (" + extra + ")" : ""}`);
@@ -98,35 +98,6 @@ note("mobile: thead hidden", theadDisplay === "none");
 note("mobile: rows render as grid cards", trDisplay === "grid", `display=${trDisplay}`);
 await page.screenshot({ path: "/tmp/admin_mobile.png", fullPage: true });
 await page.close();
-
-// --- custom domain mount: https://studiomuni.com/admin/ ---
-const CD = "https://studiomuni.com/admin/";
-const page2 = await browser.newPage();
-const cdStatus = {};
-page2.on("response", (r) => {
-  if (r.url().startsWith("https://studiomuni.com/admin/_next/")) cdStatus["asset"] = Math.max(cdStatus["asset"] ?? 0, r.status());
-  if (r.url() === "https://studiomuni.com/admin/api/vaccine-records") cdStatus["api"] = r.status();
-});
-const cdErrors = [];
-page2.on("pageerror", (e) => cdErrors.push("pageerror: " + e.message));
-page2.on("console", (m) => {
-  if (m.type() === "error" && !m.text().includes("Failed to load resource")) cdErrors.push("console.error: " + m.text());
-});
-await page2.goto(CD, { waitUntil: "networkidle" });
-note("custom domain shows gate title", (await page2.title()).includes("Protected"));
-const pw2 = page2.locator('input[name="password"]');
-note("custom domain password field present", (await pw2.count()) === 1);
-await pw2.fill("testing111");
-await page2.locator('button[type="submit"]').click();
-await page2.waitForLoadState("networkidle");
-await page2.waitForSelector("tbody tr:not(.skeleton)", { timeout: 15000 });
-const cdRows = await page2.locator("tbody tr:not(.skeleton)").count();
-note("custom domain records render", cdRows > 0, `rows=${cdRows}`);
-note("custom domain relative assets served from mount", cdStatus["asset"] === 200, `asset=${cdStatus["asset"]}`);
-note("custom domain api proxied under mount", cdStatus["api"] === 200, `api=${cdStatus["api"]}`);
-note("custom domain no page errors", cdErrors.length === 0, cdErrors.join(" | "));
-await page2.screenshot({ path: "/tmp/admin_custom_domain.png", fullPage: true });
-await page2.close();
 
 await browser.close();
 console.log(results.join("\n"));

@@ -11,7 +11,7 @@
     "qa:admin": "node scripts/admin-e2e.mjs",
     "dev:admin": "next dev admin -p 4173",
     "build:admin": "next build admin && node scripts/copy-admin-manifest.mjs",
-    "publish:admin": "bash ~/.claude/skills/here-now/scripts/publish.sh ~/orca/dog-washing-self-service/admin/out --slug eternal-arbor-vra2 --client opencode"
+    "publish:admin": "bash ~/.claude/skills/here-now/scripts/publish.sh ~/orca/dog-washing-self-service/admin/out --slug dewy-sketch-h6k7 --client opencode"
   },
   "dependencies": {
     "next": "16.3.3",

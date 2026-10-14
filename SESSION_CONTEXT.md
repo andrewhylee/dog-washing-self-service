@@ -2,17 +2,48 @@
 
 Handoff notes so a new session can resume work quickly. All known state is captured here.
 
-## Project
-- Next.js 16 static export (`output: "export"`) site for Fresh Paws self-serve dog wash, hosted on here.now.
-- Site slug: `mystic-lagoon-2g3s`; live URL: **https://mystic-lagoon-2g3s.here.now** (booking page: `/book`). Also mounted at the root of **https://studiomuni.com/** (mount_path "" → slug `mystic-lagoon-2g3s`); the admin dashboard is mounted at `studiomuni.com/admin/` → slug `eternal-arbor-vra2`.
+## Hosting account (current)
+
+- here.now personal account: `reviewmyhaul@protonmail.com` (free plan, active). This is the project's
+  dedicated account (one account per project).
+- Public site slug: `liminal-realm-qvmd` — live URL: **https://liminal-realm-qvmd.here.now**
+  (booking page: `/book`, vaccinations page: `/vaccinations`). Live version: `01M4XVY25KEP59Z2ABH028HSQZ`.
+- Admin slug: `dewy-sketch-h6k7` — live URL: **https://dewy-sketch-h6k7.here.now**.
+  Live version: `01M4XW21XJRMSE1PH6P687MXHP`.
+- **No custom domain.** `studiomuni.com` is retired and has no mounts. Admin serves at the **root**
+  of its own slug — no `basePath` (it was removed during the account migration; the old
+  `basePath: "/admin"` only made sense under the `studiomuni.com/admin/` mount and broke the
+  standalone slug URL). If a sub-path mount ever returns, re-add `basePath` to
+  `admin/next.config.mjs` and republish.
 - Publish config in `.herenow/state.json` (`auth_mode=authenticated`, `persistence=permanent`).
-- Regenerate + republish flow after edits:
+- Regenerate + republish flow after edits (key comes from `.envrc` / env, no flags needed):
   ```
   npm run lint && npm run build
-  /Users/drew/.claude/skills/here-now/scripts/publish.sh out --slug mystic-lagoon-2g3s --client opencode
+  /Users/drew/.claude/skills/here-now/scripts/publish.sh out --slug liminal-realm-qvmd --client opencode
   ```
+  First publish to a fresh account omits `--slug` (server assigns one).
+
+## Credentials layout (multi-account scheme)
+
+- This project's key lives OUTSIDE the repo: `~/.herenow/credentials.dogwash` (`chmod 600`).
+- `.envrc` (committed, contains no secret — just a pointer) exports
+  `HERENOW_API_KEY=$(cat ~/.herenow/credentials.dogwash)` so every publish from this directory
+  uses this project's account. Requires `direnv allow` once per machine.
+- Never store live keys in the project folder. `.gitignore` excludes `.herenow/*` (except
+  `urls.json`), `.env`, `.output/`.
+- Account variables (server-side, values never returned by API): `HERENOW_API_KEY` (public-site
+  `/api/vaccine` + `/api/bookings` proxies) and `ADMIN_RECORDS_KEY` (admin-site proxies, value is
+  the dedicated revocable named key `dogwash-admin-records`, id `bf026452-91ea-49bc-a295-3d786c381461`).
+  Both pinned with `allowedUpstreams: ["here.now"]`.
+- Local copies: `~/.herenow/site-admin-records-key` (current value), `~/.herenow/site-admin-password`
+  (currently temp `testing111` — CHANGE TO A REAL PASSWORD BEFORE HANDOFF).
+- Old-account backups (old key still works for reads until revoked): `~/.herenow/credentials.old-account`,
+  `~/.herenow/site-admin-records-key.old-account`, `~/.herenow/site-admin-password.old-account`.
+- Full records backup from migration day: `/var/folders/rs/nghg4yz14kjf4j9qnjwz5h6r0000gn/T/opencode/vaccine-records-backup.json`
+  (temp dir — may be gone on reboot; the live data is the source of truth now).
 
 ## Live booking system (the main feature)
+
 Two-collection architecture (owner explicitly wanted customer PII kept out of browser-accessible data):
 
 - **`availability`** (`public/.herenow/data.json`, public read/write): only `date` + `time`, used for capacity counting. No PII.
@@ -23,20 +54,33 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - **Phone validation**: `/^(\d{10}|\d{3}-\d{3}-\d{4})$/` — 10 digits, or 10 digits with hyphens (`5551234567` | `555-123-4567`). Inline `.field-error` message; confirm button disabled until valid.
 
 ### here.now manifests (must exist in `out/.herenow/` after build)
+
 - `public/.herenow/data.json` — defines collections `bookings` (owner) and `availability` (public).
-- `public/.herenow/proxy.json` — proxies:
-  - `/api/bookings` → here.now owner API, header `${HERENOW_API_KEY}` (server-side only).
-  - `/api/notify` → Discord webhook (real URL, no placeholders).
+- `public/.herenow/proxy.json` — proxies (upstreams point at the CURRENT public slug `liminal-realm-qvmd`):
+  - `/api/upload` → Cloudinary `zjq8kp0w` unsigned `upload_preset: dog_wash` (third-party, account-independent).
+  - `/api/discord` + `/api/notify` → Discord webhook (third-party; URL committed in git — rotate if that bothers you).
+  - `/api/vaccine` → `.../publishes/liminal-realm-qvmd/data/vaccine_records`, header `Bearer ${HERENOW_API_KEY}`.
+  - `/api/bookings` → `.../publishes/liminal-realm-qvmd/data/bookings`, header `Bearer ${HERENOW_API_KEY}`.
   - Uses top-level key `"proxies"` (NOT `"routes"`), `"method"` singular.
 - Access/rate limits: availability insert `30/hour/ip`; bookings write `10/hour/ip`; notify `30/hour/ip`.
 - **IMPORTANT**: Browser Site Data must use root-relative `/.herenow/data/:collection` — the relative `./.herenow/data/...` form breaks on `/book/` (resolves to `/book/.herenow/` → 404).
 
 ### Owner notification
+
 - Switched to **Discord webhook** (ntfy free tier hit 429 "daily message quota reached"; Telegram deprioritized — do not revert to ntfy).
 - Setup doc in README: Server Settings → Integrations → Webhooks → New Webhook.
-- If the webhook URL rotates, update `public/.herenow/proxy.json` `/api/notify` `upstream` and republish.
+- If the webhook URL rotates, update `public/.herenow/proxy.json` `/api/notify` + `/api/discord` `upstream` and republish.
+
+## Vaccination cards (photo storage)
+
+- Upload limit **5 MB** (`MAX_FILE_MB` in `components/vaccine-form.tsx`; copy in form + `/vaccinations` page).
+  Fits Cloudinary free (10 MB/file) and Discord webhook (20 MB/file) caps.
+- Flow: browser → `/api/upload` (Cloudinary, returns `secure_url`; PDF→first-page-JPG and HEIC→JPG
+  transform rewrites for thumbnails) → `/api/discord` (team copy with attachment) → `/api/vaccine`
+  (metadata + `card_url` into owner-only `vaccine_records`). here.now stores only the URL string.
 
 ## Homepage section order (current)
+
 1. Hero
 2. **Loved by the neighborhood** (reviews / `#reviews`) — moved to 2nd position at user request
 3. **Wash day, minus the ordeal** (`#how-it-works`)
@@ -48,6 +92,7 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 9. Final CTA
 
 ### Visual styling notes
+
 - Hero uses `--navy`.
 - Reviews / proof section: `--tub-blue`.
 - **Wash-day section background changed** from `--tub-blue` to `--soap` (light) so it visually separates from the reviews section above it. Its step cards flipped from `--soap` to `--tub-blue` to pop against the light section (3rd card stays `--lime`; step numbers `--orange`).
@@ -55,39 +100,56 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - This means a light section (wash-day) sits between two `--tub-blue`/`--navy` sections — intentional for separation.
 
 ## Files
+
 - `app/page.tsx` — homepage sections (reviews block is the 2nd section now).
 - `components/booking-demo.tsx` — booking flow; fetches root-relative; `TUB_CAPACITY = 2`; phone validation; date disabled logic.
+- `components/vaccine-form.tsx` — vaccine upload form (`MAX_FILE_MB = 5`).
 - `app/globals.css` — all section backgrounds + booking/skeleton/field styles.
 - `README.md` — booking flow, `HERENOW_API_KEY` setup, Discord webhook setup, verify commands.
-- `public/.herenow/data.json`, `public/.herenow/proxy.json` — manifests.
+- `public/.herenow/data.json`, `public/.herenow/proxy.json` — manifests (slugs = `liminal-realm-qvmd`).
 - `lib/site.ts` — site content config.
 - `scripts/qa.mjs` — Playwright/Axe QA. Note: QA test clicks a fixed future date ("Tue, Sep 1") which goes stale/past as time rolls forward; may need updating.
 - `out/.herenow/` — build output, manifests verified present after each build.
+- `.envrc` — exports `HERENOW_API_KEY` from `~/.herenow/credentials.dogwash` (pointer only, safe to commit).
 
 ## Work state / next moves
-- Latest publish `live_version_id`: `01M1HFVRQ89HCCHRWSGZ77PJMT` (section reorder + wash-day background change).
-- Verified end-to-end earlier: availability returns 200, bookings unauthenticated GET → 403, `/api/bookings` proxy created + deleted a test record, `/api/notify` → Discord 204. `HERENOW_API_KEY` account variable exists (`7001555d...e4d2`).
+
+- Migration to the dedicated account completed 2026-10-14: fresh publishes, variables recreated,
+  proxy slugs re-pointed, 2 vaccine records migrated (new record IDs; `card_url`s verified identical),
+  `/api/vaccine` write chain verified with a create+delete probe, admin e2e **21/21 PASS** (`npm run qa:admin`).
+- Records currently: 2 (mew/Johnny Bravo, ppo/pp) — real data, do NOT delete.
 - **Pending (owner, out of agent scope)**: do one real browser booking on the live site to confirm the Discord notification lands.
+- **CHANGE THE ADMIN PASSWORD** back to a real one before handing off (currently temp `testing111`)!
 - QA test may need the stale date / phone format check revisited.
+
 ## Owner admin site (vaccine records) — Next.js app in `admin/`
-- **Canonical URL**: **https://studiomuni.com/admin/** (custom-domain mount: `studiomuni.com` → `admin` mount → slug `eternal-arbor-vra2`). The old `https://eternal-arbor-vra2.here.now/` now 308-redirects here (set via `PUT /api/v1/publish/eternal-arbor-vra2/primary-domain {"domain":"studiomuni.com"}`; synced:true).
-- **Serving under a sub-path**: built with `basePath: "/admin"` (admin/next.config.mjs). Do NOT "relativize" asset URLs by hand — Next/Turbopack module keys must stay absolute and consistent; the framework handles the `/admin` prefix. Keep the dashboard's data fetches RELATIVE (`fetch("api/vaccine-records")` — no leading slash) so they resolve under the mount (`studiomuni.com/admin/api/vaccine-records`) and at a root-host alike.
-- **Architecture**: a SECOND Next.js static-export app living at `admin/` in the same repo (own `app/`, `next.config.mjs` with `output:"export", trailingSlash:true, distDir:"out"`, `tsconfig.json`). Built with `next build admin` (CLI supports a directory arg), output is `admin/out/`. Legacy plain-static `admin-site/` was deleted after the migration was verified. Root `tsconfig.json` excludes `admin/**`; eslint still lints it (add `admin/.next/**`/`admin/out/**` to ignores — done).
+
+- **Canonical URL**: **https://dewy-sketch-h6k7.here.now/** (root of its own slug; no custom domain, no basePath).
+- **Architecture**: a SECOND Next.js static-export app living at `admin/` in the same repo (own `app/`,
+  `next.config.mjs` with `output:"export", trailingSlash:true, distDir:"out"`, `tsconfig.json`).
+  Built with `next build admin` (CLI supports a directory arg), output is `admin/out/`.
+  Root `tsconfig.json` excludes `admin/**`; eslint ignores `admin/.next/**`/`admin/out/**`.
 - **Purpose**: lets the owner VIEW + DELETE submitted vaccine records without exposing owner-only data on the public site. Decided after proving the public-site approach impossible (here.now proxy does NOT forward client-supplied `Authorization`; injected key would make reads public).
-- **Security model**: site password gate covers BOTH the page and the `/api/*` proxy routes (verified: anonymous root + api → 401 Protected wall; after gate login cookie → data OK). Proxy manifest injects account variable `ADMIN_RECORDS_KEY` server-side (`allowedUpstreams: ["here.now"]`), value = dedicated revocable key at `~/.herenow/site-admin-records-key`.
+- **Security model**: site password gate covers BOTH the page and the `/api/*` proxy routes (verified: anonymous root + api → 401 Protected wall; after gate login cookie → data OK). Proxy manifest injects account variable `ADMIN_RECORDS_KEY` server-side. Temp site password `testing111` — CHANGE BEFORE HANDOFF.
 - **Admin build/publish flow**:
   ```
   npm run lint && npm run build:admin        # builds admin/out + copies admin/.herenow/proxy.json into out/.herenow/
-  npm run publish:admin                      # publishes admin/out → eternal-arbor-vra2 (uses --overwrite for updates)
-  npm run qa:admin                           # headless Playwright e2e (here.now 308 + custom domain mount, login, rows/search/sort/refresh, mobile overflow)
+  npm run publish:admin                      # publishes admin/out → dewy-sketch-h6k7 (uses --slug for updates)
+  npm run qa:admin                           # headless Playwright e2e (gate, login, rows/search/sort/refresh, mobile overflow)
   npm run dev:admin                          # next dev admin -p 4173 (data won't load: proxy/gate exist only on here.now)
   ```
   Republish with `--overwrite` while iterating; once files stabilize, drop it.
-- **Proxy routes** (`admin/.herenow/proxy.json`): `GET /api/vaccine-records` → injects `Bearer ${ADMIN_RECORDS_KEY}`, rateLimit `30/hour/ip`; `DELETE /api/vaccine-records/*` → injects same, upstream WITHOUT trailing `/*` (verified working). Under the mount these answer at `/admin/api/vaccine-records`.
-- **Response shape (learned live)**: list = `{"records":[{"id":"rec_...","data":{...fields...}},...]}` — fields nested under `data`; flattening lives in `admin/app/records.ts` (pure, exported).
-- **Dashboard**: `admin/app/dashboard.tsx` client component — table (Pet thumb + name/file, Owner, Contact, sortable Uploaded header w/ aria-sort, Open card, Delete w/ confirm), search by owner/pet/phone/email, skeleton loading, subtle `.state-box.note`, empty/empty-search states, database-icon brand header + favicon (app/icon.png), Refresh button. ≤760px the wide table becomes stacked per-record cards (no horizontal scroll). Loading fetch deferred via `setTimeout(...,0)` to satisfy `react-hooks/set-state-in-effect`.
-- **Temp site password `testing111`** (user set so agent can verify). `~/.herenow/site-admin-password` currently holds a STALE old password — refresh it if you change the real password. CHANGE THE PASSWORD BACK to a real one before handing off!
-- To change password: `PATCH https://here.now/api/v1/publish/eternal-arbor-vra2/metadata` with `{"password":"..."}` + `Authorization: Bearer $(cat ~/.herenow/credentials)`. Password changes revoke existing sessions.
-- Records currently: 2 (mew/Johnny Bravo, ppo/pp) — real data, do NOT delete.
+- **Proxy routes** (`admin/.herenow/proxy.json`, upstreams point at the public slug `liminal-realm-qvmd`):
+  `GET /api/vaccine-records` → injects `Bearer ${ADMIN_RECORDS_KEY}`, rateLimit `30/hour/ip`;
+  `DELETE /api/vaccine-records/*` → injects same, upstream WITHOUT trailing `/*` (verified working).
+- **Response shape**: list = `{"records":[{"id":"rec_...","data":{...fields...}},...]}` — fields nested under `data`; flattening lives in `admin/app/records.ts` (pure, exported).
+- **Dashboard**: `admin/app/dashboard.tsx` client component — table (Pet thumb + name/file, Owner, Contact, sortable Uploaded header w/ aria-sort, Open card, Delete w/ confirm), search by owner/pet/phone/email, skeleton loading, subtle `.state-box.note`, empty/empty-search states, database-icon brand header + favicon (app/icon.png), Refresh button. ≤760px the wide table becomes stacked per-record cards (no horizontal scroll). Loading fetch deferred via `setTimeout(...,0)` to satisfy `react-hooks/set-state-in-effect`. Data fetches are RELATIVE (`fetch("api/vaccine-records")`).
 - Gate login brute-force: repeated failed POSTs trigger a cooldown (~5 min) even for the right password — wait it out, don't hammer.
 - Caching: here.now static assets `cache-control: public, max-age=3600, stale-while-revalidate=86400`; Next hashed `_next` chunk names + `no-cache` index.html make stale-asset issues moot.
+
+## Retired (old account)
+
+- Old slugs `mystic-lagoon-2g3s` (public) and `eternal-arbor-vra2` (admin) still exist on the previous
+  account with their data (bookings/availability were never migrated — not in use). Old `studiomuni.com`
+  mounts/redirects untouched. Delete the old sites whenever the owner confirms they're unneeded
+  (needs `~/.herenow/credentials.old-account`).
