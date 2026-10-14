@@ -305,6 +305,7 @@ export default function Home() {
         <section className="final-cta">
           <div className="shell final-cta-inner">
             <p>Ready when they roll in something questionable.</p>
+            <p className="final-cta-mission">Fresh Paws Dog Wash is dedicated to providing every dog in our community with the care, love, and attention they deserve because we believe dogs are more than pets—they’re cherished members of our families.</p>
             <div>
               <h2>Fresh starts here.</h2>
               <a href={site.directionsHref} target="_blank" rel="noreferrer" className="button button-light">
