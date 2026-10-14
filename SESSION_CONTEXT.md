@@ -84,9 +84,12 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - Flow: browser → `/api/upload` (Cloudinary, returns `secure_url`; PDF→first-page preview and HEIC→preview
   delivery rewrites) → `/api/discord` (team copy with attachment) → `/api/vaccine`
   (metadata + `card_url` into owner-only `vaccine_records`). here.now stores only the URL string.
-- **Photo shrink (2026-10-14, fast single pass: long edge ≤900px, WebP q65)**: `convertToWebp()`
-  in `components/vaccine-form.tsx` does ONE canvas encode (never upscales; ships the WebP only when it
-  beats the original). Measured: 986 KB photo → 50 KB, 1.2 MB illustration → 36 KB outgoing.
+- **Photo shrink (2026-10-14, fast single pass: long edge ≤900px)**: `convertToWebp()`
+  in `components/vaccine-form.tsx` does ONE canvas encode (never upscales; ships the encode only when it
+  beats the original). Prefers WebP q65 (~50 KB), falls back to JPEG q0.7 (~77 KB) on browsers without a
+  WebP encoder — JPEG encoding works everywhere canvas does, so the size win is universal instead of
+  degrading to the multi-MB original. Measured on a 986 KB photo: 50 KB webp (modern), 77 KB jpg
+  (simulated legacy Safari).
   Applies to JPEG/PNG (and HEIC where the browser can decode it). Discord still gets the original;
   the record keeps the original `file.name`. PDFs skip conversion. If the WebP POST is rejected,
   the form retries once with the original so uploads never hard-fail on preset config.

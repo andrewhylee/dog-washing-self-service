@@ -19,13 +19,16 @@ function formatBytes(bytes: number) {
 }
 
 /**
- * Shrink a photo to a small WebP before upload. Returns the original file when
- * conversion isn't possible (PDFs, or formats the browser can't decode such as
- * HEIC outside Safari) so the established server-side flow still handles them.
+ * Shrink a photo before upload. Prefers WebP; falls back to JPEG encoding
+ * (supported by every canvas implementation, unlike WebP) so older browsers
+ * still upload ~100 KB instead of the multi-MB original. Returns the original
+ * file when conversion isn't possible (PDFs, or formats the browser can't
+ * decode such as HEIC outside Safari).
  */
 async function convertToWebp(file: File): Promise<{ blob: Blob; fileName: string; mimeType: string }> {
   const fallback = { blob: file, fileName: file.name, mimeType: file.type };
-  if (file.type === "application/pdf" || file.type === "image/webp") return fallback;
+  if (file.type === "application/pdf") return fallback;
+  if (file.type === "image/webp") return fallback;
   let bitmap: ImageBitmap;
   try {
     bitmap = await createImageBitmap(file);
@@ -44,15 +47,20 @@ async function convertToWebp(file: File): Promise<{ blob: Blob; fileName: string
     const ctx = canvas.getContext("2d");
     if (!ctx) return fallback;
     ctx.drawImage(bitmap, 0, 0, width, height);
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, "image/webp", WEBP_QUALITY)
-    );
-    // Browsers without WebP encoders (older Safari) silently return PNG instead —
-    // never ship that: a PNG photo is megabytes, the exact surprise we're avoiding.
-    if (!blob || !blob.type.startsWith("image/webp")) return fallback;
-    // Still better than the original? Ship it; otherwise keep the original.
-    if (blob.size < file.size) {
-      return { blob, fileName: `${base}.webp`, mimeType: "image/webp" };
+    const encode = (type: string, quality: number) =>
+      new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, quality));
+    // Browsers without a WebP encoder silently return PNG instead — only trust
+    // a blob whose type matches what was asked for.
+    const webp = await encode("image/webp", WEBP_QUALITY);
+    if (webp && webp.type.startsWith("image/webp")) {
+      if (webp.size < file.size) {
+        return { blob: webp, fileName: `${base}.webp`, mimeType: "image/webp" };
+      }
+      return fallback;
+    }
+    const jpeg = await encode("image/jpeg", 0.7);
+    if (jpeg && jpeg.type.startsWith("image/jpeg") && jpeg.size < file.size) {
+      return { blob: jpeg, fileName: `${base}.jpg`, mimeType: "image/jpeg" };
     }
     return fallback;
   } finally {
