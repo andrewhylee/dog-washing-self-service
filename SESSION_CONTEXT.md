@@ -88,11 +88,16 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
   via canvas before the Cloudinary upload; Discord still gets the original; the record keeps the original
   `file.name`. PDFs skip conversion. If the WebP POST is rejected, the form retries once with the original
   so uploads never hard-fail on preset config.
-- **Cloudinary preset action REQUIRED (owner, console `zjq8kp0w` → Upload preset `dog_wash`):**
-  preset currently rejects webp (`400 "Image file format webp not allowed"`), so converted uploads fall
-  back to originals until fixed. In the preset set **Allowed formats += webp** AND incoming transformation
-  `w_1600,c_limit / f_webp / q_65` (covers PDFs + HEIC fallbacks at rest). After the change, re-run the
-  upload matrix (large JPG → stored `format: webp`; HEIC; PDF) and delete the test records.
+- **Cloudinary preset action (owner, console `zjq8kp0w` → Upload preset `dog_wash`):**
+  REQUIRED: **Allowed formats += webp** — the preset currently rejects webp
+  (`400 "Image file format webp not allowed"`), so converted uploads fall back to originals until fixed.
+  OPTIONAL hardening (DECLINED 2026-10-14 — owner decision, cost/simplicity): incoming transformation
+  `w_1600,c_limit / f_webp / q_65`. The JS conversion already covers JPEG/PNG/HEIC-where-decodable, so the
+  preset transform would only add value for the two paths JS can't shrink: PDFs and HEIC originals that
+  bypassed browser conversion (plus any future non-JS uploader). Those store at original size instead;
+  transformation cost was never the issue (~0.001 credits/upload vs 25 free). Revisit only if PDF/HEIC
+  storage becomes a concern. If the preset ever changes, re-run the upload matrix (large JPG → stored
+  `format: webp`; HEIC; PDF) and delete the test records.
 - Records currently: 3 (mew/Johnny Bravo, ppo/pp — migrated; Keke/"Testing Tester" — appeared 2026-10-14
   19:54 UTC, looks like the owner's own live-form test, NOT agent-created: do NOT delete without asking).
 
