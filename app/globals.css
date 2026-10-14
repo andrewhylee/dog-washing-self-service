@@ -4,10 +4,10 @@
   --teal: #076c70;
   --teal-dark: #075f62;
   --tub-blue: #d9f5f2;
-  --orange: #ff7043;
-  --orange-dark: #d94c22;
+  --orange: #f9a8d4;
+  --orange-dark: #d15d8d;
   --soap: #fffdf7;
-  --lime: #d9f45b;
+  --lime: #fde68a;
   --white: #ffffff;
   --line: rgba(20, 43, 59, 0.18);
   --shadow: 0 24px 70px rgba(20, 43, 59, 0.12);
@@ -1256,7 +1256,7 @@ h3 {
 .slot-full-note { color: var(--orange-dark); font-weight: 700; }
 .slot-last-note { color: var(--teal); font-weight: 700; }
 
-.booking-error { margin-top: 14px; padding: 11px 14px; border: 2px solid rgba(217, 76, 34, 0.35); border-radius: 12px; background: rgba(255, 112, 67, 0.08); color: var(--orange-dark); font-size: 0.8rem; font-weight: 700; }
+.booking-error { margin-top: 14px; padding: 11px 14px; border: 2px solid rgba(209, 93, 141, 0.35); border-radius: 12px; background: rgba(249, 168, 212, 0.12); color: var(--orange-dark); font-size: 0.8rem; font-weight: 700; }
 .booking-fields input { margin-bottom: 22px; }
 .booking-fields input:last-of-type { margin-bottom: 0; }
 .button-ghost { border-color: var(--navy); background: transparent; color: var(--navy); }
