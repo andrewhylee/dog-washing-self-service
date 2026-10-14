@@ -24,7 +24,7 @@ export default function VaccinationsPage() {
           </p>
           <div className="booking-trust">
             <span>✓ Quick upload, no appointment needed</span>
-            <span>✓ Photos or PDFs up to 2 MB</span>
+            <span>✓ Photos or PDFs up to 5 MB</span>
             <span>✓ Your details stay private</span>
           </div>
         </section>

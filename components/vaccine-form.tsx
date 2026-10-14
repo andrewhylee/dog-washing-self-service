@@ -8,7 +8,7 @@ import { ArrowIcon, CheckIcon } from "@/components/icons";
 const PHONE_RE = /^(\d{10}|\d{3}-\d{3}-\d{4})$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/heic", "image/heif", "application/pdf"];
-const MAX_FILE_MB = 2;
+const MAX_FILE_MB = 5;
 
 function formatBytes(bytes: number) {
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
@@ -293,7 +293,7 @@ export function VaccineForm() {
                 ) : (
                   <>
                     <strong>Tap to upload a vaccine card</strong>
-                    <span>Photo (JPG, PNG, HEIC) or PDF · up to 2 MB</span>
+                    <span>Photo (JPG, PNG, HEIC) or PDF · up to 5 MB</span>
                   </>
                 )}
               </label>
