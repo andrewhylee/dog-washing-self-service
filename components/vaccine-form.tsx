@@ -47,7 +47,9 @@ async function convertToWebp(file: File): Promise<{ blob: Blob; fileName: string
     const blob = await new Promise<Blob | null>((resolve) =>
       canvas.toBlob(resolve, "image/webp", WEBP_QUALITY)
     );
-    if (!blob) return fallback;
+    // Browsers without WebP encoders (older Safari) silently return PNG instead —
+    // never ship that: a PNG photo is megabytes, the exact surprise we're avoiding.
+    if (!blob || !blob.type.startsWith("image/webp")) return fallback;
     // Still better than the original? Ship it; otherwise keep the original.
     if (blob.size < file.size) {
       return { blob, fileName: `${base}.webp`, mimeType: "image/webp" };

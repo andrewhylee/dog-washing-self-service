@@ -90,23 +90,18 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
   Applies to JPEG/PNG (and HEIC where the browser can decode it). Discord still gets the original;
   the record keeps the original `file.name`. PDFs skip conversion. If the WebP POST is rejected,
   the form retries once with the original so uploads never hard-fail on preset config.
-- **Cloudinary preset findings (dog_wash, console `zjq8kp0w`) — READ BEFORE TOUCHING:**
-  The same `IMG_4007.jpeg` (4.1 MB iPhone photo) was uploaded 4x on 2026-10-14 (Te 20:18, Eheh 20:30,
-  Ii 20:35, Yu 20:37 UTC) and stored as PNG every time — 3.6 MB once, then 1.6 MB byte-identical 3x.
-  Our code cannot emit PNG (only canvas-WebP or original bytes verbatim), so a preset-side format
-  conversion was active, with parameters changing mid-window. In the same window webp uploads went from
-  `400 "format webp not allowed"` to accepted (93 KB `.webp` stored ~20:40). Conclusion: the preset was
-  edited live during testing. HEIC itself was never the problem: the form accepts heic/heif
-  (`ALLOWED_TYPES` + input `accept`), and a live HEIC probe returned 200, stored `.heic`, delivered as
-  `f_webp` (120 KB → 105 KB). Note an unacceptable format yields a 400 error, never a PNG.
-  Ideal end-state (verified working ~20:40): allowed formats include jpg/png/webp/heic/pdf, NO format
-  conversion, NO incoming transformation. If dashboard ever again shows MB-sized PNGs for new uploads,
-  someone edited the preset — re-check its screen.
+- **PNG mystery SOLVED 2026-10-14 (browser quirk, not preset, not code logic):** `canvas.toBlob(..., "image/webp")`
+  on browsers without a WebP encoder (older Safari) silently returns **PNG bytes**. The old code trusted the
+  requested type, named it `.webp`, and Cloudinary sniffed the PNG magic bytes → stored `.png` (3.6 MB once
+  at 1600px canvas, 1.6 MB 3x at 900px — sizes match canvas dims, deterministic per build). Same-file
+  uploads (Te/Eheh/Ii/Yu `IMG_4007.jpeg`) prove it; the preset was innocent (no transformations set; webp
+  since allowed). Fix: verify `blob.type.startsWith("image/webp")` before shipping, else fall back to the
+  original (verified in lab by simulating a webp-less browser: outgoing = original bytes, original name).
 - Preset incoming-transformation idea DECLINED 2026-10-14 (owner decision, simplicity).
-- **Cloudinary preset action (owner, console `zjq8kp0w` → Upload preset `dog_wash`):**
-  REQUIRED: **Allowed formats must include webp** (was rejected with 400 on 2026-10-14; uploads now
-  succeed, so this appears resolved — confirm it stays). See preset-findings note above for the
-  JPG→PNG conversion mystery: make sure no format conversion / incoming transformation is set.
+- **Cloudinary preset (owner, console `zjq8kp0w` → Upload preset `dog_wash`):**
+  Allowed formats = webp,jpeg,jpg,heic,heif,pdf,png; NO transformations set (owner-confirmed 2026-10-14).
+  This is the ideal end-state — leave it alone. WebP uploads accepted; HEIC verified end-to-end (stored
+  `.heic`, delivered `f_webp`).
 - Records currently: 7 — mew/Johnny Bravo + ppo/pp (migrated Sep, REAL DATA), plus 5 owner live-form
   tests 2026-10-14 (Keke 19:54; Te/Eheh/Ii/Yu 20:18–20:37, all the same `IMG_4007.jpeg`): NOT agent-created,
   do NOT delete without asking. All agent zzz-* probes created and deleted same day.
