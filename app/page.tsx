@@ -22,15 +22,15 @@ export default function Home() {
           <div className="shell hero-grid">
             <div className="hero-copy">
               <p className="eyebrow">
-                <span className="eyebrow-dot" /> Sunnyside’s neighborhood wash
+                <span className="eyebrow-dot" /> Sunnyside’s self-serve dog wash
               </p>
               <h1>
                 Fresh paws.
                 <span>Happy hallway.</span>
               </h1>
               <p className="hero-lede">
-                A proper dog wash without the bathtub crouch, soaked towels, or bathroom cleanup.
-                You bring the pup & vaccine card — we’ll set the stage.
+                A proper self-serve dog wash without the bathtub crouch, soaked towels, or bathroom cleanup.
+                You wash your pup in our tubs with pro products — we provide everything and handle the mess.
               </p>
               <div className="hero-actions">
                 <a className="button button-primary" href={site.directionsHref} target="_blank" rel="noreferrer">

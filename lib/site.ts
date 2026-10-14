@@ -77,6 +77,11 @@ export const included = [
 
 export const faqs = [
   {
+    question: "Do you wash my dog for me?",
+    answer:
+      "No — that's the self-serve part! You wash your own pup in our raised tubs with our professional products, tools, and dryers. Staff are around if you need a hand, but the scrubbing is yours.",
+  },
+  {
     question: "Do I need to bring anything?",
     answer:
       "No. Washing stations, aprons, shampoo, conditioner, grooming tools, towels, dryers, and fragrance are all provided — with no cleanup required.",

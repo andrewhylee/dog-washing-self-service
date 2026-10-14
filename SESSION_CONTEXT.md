@@ -155,8 +155,11 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - Upload optimization shipped same day: 5 MB cap → single-pass shrink (long edge ≤900px, WebP q65 w/
   JPEG q0.7 fallback for encoder-less browsers, PDFs skip, webp-rejection retry) → parallel
   Cloudinary+Discord uploads of the SAME shrunk file (measured 1 ms apart, ~50 KB each; original never
-  uploaded anywhere) → WebP accepted as upload input. Live version `01M4Y3JBW…`, e2e-equivalent verified
-  via intercepted lab probes (no live side effects). Repo: `2d33c5f` + `c38ab96` + `dd05c10`.
+  uploaded anywhere) → WebP accepted as upload input. Live version `01M4Y8H9H…`, e2e-equivalent verified
+  via intercepted lab probes (no live side effects). Repo: `2d33c5f` + `c38ab96` + `dd05c10` + follow-ups.
+- Self-serve messaging (minimal pass): hero eyebrow + lede rewritten ("You wash your pup…"), new first FAQ
+  ("Do you wash my dog for me?"), title tag → "Fresh Paws Self-Serve Dog Wash | Sunnyside, Queens".
+  H1 untouched (qa.mjs asserts on it). Live version `01M4Y8H9H0T69P6VS0PZBQPD6G`.
 - **Pending (owner, out of agent scope)**: do one real browser booking on the live site to confirm the Discord notification lands.
 - **CHANGE THE ADMIN PASSWORD** back to a real one before handing off (currently temp `testing111`)!
 - Old here.now account: sites + bookings/availability data still there; delete whenever owner confirms.
