@@ -83,23 +83,29 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - Flow: browser → `/api/upload` (Cloudinary, returns `secure_url`; PDF→first-page preview and HEIC→preview
   delivery rewrites) → `/api/discord` (team copy with attachment) → `/api/vaccine`
   (metadata + `card_url` into owner-only `vaccine_records`). here.now stores only the URL string.
-- **Photo shrink (2026-10-14, aggressive: 1600px long edge, WebP q65 → ~100-250 KB)**: `convertToWebp()`
-  in `components/vaccine-form.tsx` converts JPEG/PNG (and HEIC where the browser can decode it) to WebP
-  via canvas before the Cloudinary upload; Discord still gets the original; the record keeps the original
-  `file.name`. PDFs skip conversion. If the WebP POST is rejected, the form retries once with the original
+- **Photo shrink (2026-10-14, guaranteed ≤100 KB)**: `convertToWebp()` in `components/vaccine-form.tsx`
+  tries up to 9 encodes (1600px q60→30, then 1280px, then 1024px) and uploads the first WebP under
+  100 KB; if none hits it, the smallest encode wins when it beats the original. Verified in lab:
+  986 KB photo → 94 KB, 1.2 MB illustration → 65 KB outgoing. Applies to JPEG/PNG (and HEIC where the
+  browser can decode it). Discord still gets the original; the record keeps the original `file.name`.
+  PDFs skip conversion. If the WebP POST is rejected, the form retries once with the original
   so uploads never hard-fail on preset config.
+- **Cloudinary preset findings (dog_wash, console `zjq8kp0w`) — READ BEFORE TOUCHING:**
+  (a) The preset initially rejected webp (`400 "Image file format webp not allowed"`, seen live) — webp
+  uploads now succeed (93 KB `.webp` stored 2026-10-14), so someone has since allowed it.
+  (b) A 4.1 MB iPhone `IMG_4007.jpeg` was stored as a **3.6 MB PNG** — our code never emits PNG, so the
+  preset must/must-have-had a server-side format conversion (JPG→PNG recompression also explains the
+  earlier 4.1→3.5 MB report). Ideal end-state: allowed formats include jpg/png/webp/heic/pdf, NO format
+  conversion, NO incoming transformation (client already guarantees ≤100 KB; every preset transform is
+  dead weight). If dashboard ever again shows MB-sized files for new uploads, re-check the preset screen.
+- Preset incoming-transformation idea DECLINED 2026-10-14 (owner decision, simplicity).
 - **Cloudinary preset action (owner, console `zjq8kp0w` → Upload preset `dog_wash`):**
-  REQUIRED: **Allowed formats += webp** — the preset currently rejects webp
-  (`400 "Image file format webp not allowed"`), so converted uploads fall back to originals until fixed.
-  OPTIONAL hardening (DECLINED 2026-10-14 — owner decision, cost/simplicity): incoming transformation
-  `w_1600,c_limit / f_webp / q_65`. The JS conversion already covers JPEG/PNG/HEIC-where-decodable, so the
-  preset transform would only add value for the two paths JS can't shrink: PDFs and HEIC originals that
-  bypassed browser conversion (plus any future non-JS uploader). Those store at original size instead;
-  transformation cost was never the issue (~0.001 credits/upload vs 25 free). Revisit only if PDF/HEIC
-  storage becomes a concern. If the preset ever changes, re-run the upload matrix (large JPG → stored
-  `format: webp`; HEIC; PDF) and delete the test records.
-- Records currently: 3 (mew/Johnny Bravo, ppo/pp — migrated; Keke/"Testing Tester" — appeared 2026-10-14
-  19:54 UTC, looks like the owner's own live-form test, NOT agent-created: do NOT delete without asking).
+  REQUIRED: **Allowed formats must include webp** (was rejected with 400 on 2026-10-14; uploads now
+  succeed, so this appears resolved — confirm it stays). See preset-findings note above for the
+  JPG→PNG conversion mystery: make sure no format conversion / incoming transformation is set.
+- Records currently: 4 — mew/Johnny Bravo + ppo/pp (migrated Sep), Keke/"Testing Tester" (owner's live-form
+  test 2026-10-14 19:54 UTC), Te/Mo Mi `IMG_4007.jpeg` (owner's 4.1 MB iPhone test 20:18 UTC, stored as 3.6 MB
+  PNG by preset conversion — see findings above). Keke + Te are NOT agent-created: do NOT delete without asking.
 
 ## Homepage section order (current)
 

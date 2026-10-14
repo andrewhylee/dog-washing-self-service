@@ -9,9 +9,20 @@ const PHONE_RE = /^(\d{10}|\d{3}-\d{3}-\d{4})$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/heic", "image/heif", "application/pdf"];
 const MAX_FILE_MB = 5;
-// Aggressive-but-readable photo target: phone photos land ~100-250 KB as WebP.
-const WEBP_MAX_EDGE = 1600;
-const WEBP_QUALITY = 0.65;
+// Aggressive-but-readable photo target: uploads leave the browser at ~100 KB.
+const WEBP_TARGET_BYTES = 100 * 1024;
+// Resolution first (text stays legible), then quality, then smaller dims.
+const WEBP_ATTEMPTS = [
+  { edge: 1600, quality: 0.6 },
+  { edge: 1600, quality: 0.5 },
+  { edge: 1600, quality: 0.4 },
+  { edge: 1600, quality: 0.3 },
+  { edge: 1280, quality: 0.5 },
+  { edge: 1280, quality: 0.4 },
+  { edge: 1280, quality: 0.3 },
+  { edge: 1024, quality: 0.4 },
+  { edge: 1024, quality: 0.3 },
+];
 
 function formatBytes(bytes: number) {
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
@@ -33,21 +44,32 @@ async function convertToWebp(file: File): Promise<{ blob: Blob; fileName: string
     return fallback;
   }
   try {
-    const scale = Math.min(1, WEBP_MAX_EDGE / Math.max(bitmap.width, bitmap.height));
-    const width = Math.max(1, Math.round(bitmap.width * scale));
-    const height = Math.max(1, Math.round(bitmap.height * scale));
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return fallback;
-    ctx.drawImage(bitmap, 0, 0, width, height);
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, "image/webp", WEBP_QUALITY)
-    );
-    if (!blob) return fallback;
     const base = file.name.replace(/\.[^.]+$/, "") || "vaccine-card";
-    return { blob, fileName: `${base}.webp`, mimeType: "image/webp" };
+    let smallest: Blob | null = null;
+    for (const attempt of WEBP_ATTEMPTS) {
+      const scale = Math.min(1, attempt.edge / Math.max(bitmap.width, bitmap.height));
+      const width = Math.max(1, Math.round(bitmap.width * scale));
+      const height = Math.max(1, Math.round(bitmap.height * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return fallback;
+      ctx.drawImage(bitmap, 0, 0, width, height);
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/webp", attempt.quality)
+      );
+      if (!blob) return fallback;
+      if (blob.size <= WEBP_TARGET_BYTES) {
+        return { blob, fileName: `${base}.webp`, mimeType: "image/webp" };
+      }
+      if (!smallest || blob.size < smallest.size) smallest = blob;
+    }
+    // Never hit the target: still return the smallest encode if it beats the original.
+    if (smallest && smallest.size < file.size) {
+      return { blob: smallest, fileName: `${base}.webp`, mimeType: "image/webp" };
+    }
+    return fallback;
   } finally {
     bitmap.close();
   }
