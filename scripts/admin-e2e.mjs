@@ -1,6 +1,6 @@
 import { chromium } from "playwright";
 
-const BASE = "https://dewy-sketch-h6k7.here.now/";
+const BASE = "https://freshpawsdogwash.com/office/";
 const results = [];
 const note = (label, ok, extra = "") => {
   results.push(`${ok ? "PASS" : "FAIL"}  ${label}${extra ? "  (" + extra + ")" : ""}`);

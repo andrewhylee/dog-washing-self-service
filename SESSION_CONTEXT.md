@@ -6,15 +6,20 @@ Handoff notes so a new session can resume work quickly. All known state is captu
 
 - here.now personal account: `reviewmyhaul@protonmail.com` (free plan, active). This is the project's
   dedicated account (one account per project).
-- Public site slug: `liminal-realm-qvmd` — live URL: **https://liminal-realm-qvmd.here.now**
+- Public site slug: `liminal-realm-qvmd` — live URL: **https://liminal-realm-qvmd.here.now**,
+  also mounted at the root of **https://freshpawsdogwash.com/** (mount_path `""`).
   (booking page: `/book`, vaccinations page: `/vaccinations`). Live version: `01M4XVY25KEP59Z2ABH028HSQZ`.
-- Admin slug: `dewy-sketch-h6k7` — live URL: **https://dewy-sketch-h6k7.here.now**.
-  Live version: `01M4XW21XJRMSE1PH6P687MXHP`.
-- **No custom domain.** `studiomuni.com` is retired and has no mounts. Admin serves at the **root**
-  of its own slug — no `basePath` (it was removed during the account migration; the old
-  `basePath: "/admin"` only made sense under the `studiomuni.com/admin/` mount and broke the
-  standalone slug URL). If a sub-path mount ever returns, re-add `basePath` to
-  `admin/next.config.mjs` and republish.
+- Admin slug: `dewy-sketch-h6k7` — canonical URL: **https://freshpawsdogwash.com/office/**
+  (custom-domain mount `office` → slug `dewy-sketch-h6k7`). The bare `https://dewy-sketch-h6k7.here.now/`
+  308-redirects there (set via `PUT /api/v1/publish/dewy-sketch-h6k7/primary-domain
+  {"domain":"freshpawsdogwash.com"}`; synced:true).
+  Live version: `01M4XZ750HQ0MBWQE81N22A48P`.
+- **Serving under a sub-path**: the admin app is built with `basePath: "/office"`
+  (admin/next.config.mjs) so every asset/API reference stays under the mount. Do NOT hand-relativize
+  asset URLs — Next/Turbopack module keys must stay absolute and consistent; the framework handles
+  the prefix. Without basePath, root-absolute `/_next/...` refs 404 at the domain root and the
+  dashboard renders as an unstyled shell (giant icon, no data) — seen live 2026-10-14. If the mount
+  path ever changes, basePath must match it exactly. (No basePath on the public site — root mount.)
 - Publish config in `.herenow/state.json` (`auth_mode=authenticated`, `persistence=permanent`).
 - Regenerate + republish flow after edits (key comes from `.envrc` / env, no flags needed):
   ```
@@ -116,7 +121,10 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 
 - Migration to the dedicated account completed 2026-10-14: fresh publishes, variables recreated,
   proxy slugs re-pointed, 2 vaccine records migrated (new record IDs; `card_url`s verified identical),
-  `/api/vaccine` write chain verified with a create+delete probe, admin e2e **21/21 PASS** (`npm run qa:admin`).
+  `/api/vaccine` write chain verified with a create+delete probe.
+- Custom domain `freshpawsdogwash.com` connected same day: root → public site, `/office/` → admin
+  (admin rebuilt with `basePath: "/office"`; slug 308-redirects to the mount). Admin e2e **21/21 PASS**
+  on the mount (`npm run qa:admin`, targets `https://freshpawsdogwash.com/office/`).
 - Records currently: 2 (mew/Johnny Bravo, ppo/pp) — real data, do NOT delete.
 - **Pending (owner, out of agent scope)**: do one real browser booking on the live site to confirm the Discord notification lands.
 - **CHANGE THE ADMIN PASSWORD** back to a real one before handing off (currently temp `testing111`)!
@@ -124,7 +132,9 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 
 ## Owner admin site (vaccine records) — Next.js app in `admin/`
 
-- **Canonical URL**: **https://dewy-sketch-h6k7.here.now/** (root of its own slug; no custom domain, no basePath).
+- **Canonical URL**: **https://freshpawsdogwash.com/office/** (custom-domain mount: `freshpawsdogwash.com`
+  → `office` mount → slug `dewy-sketch-h6k7`). The bare `https://dewy-sketch-h6k7.here.now/` 308-redirects
+  here (primary-domain, synced:true; redirects take up to 60s to start, up to 1h to stop for return visitors).
 - **Architecture**: a SECOND Next.js static-export app living at `admin/` in the same repo (own `app/`,
   `next.config.mjs` with `output:"export", trailingSlash:true, distDir:"out"`, `tsconfig.json`).
   Built with `next build admin` (CLI supports a directory arg), output is `admin/out/`.
