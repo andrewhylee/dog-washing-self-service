@@ -7,8 +7,8 @@ Handoff notes so a new session can resume work quickly. All known state is captu
 - here.now personal account: `reviewmyhaul@protonmail.com` (free plan, active). This is the project's
   dedicated account (one account per project).
 - Public site slug: `liminal-realm-qvmd` — live URL: **https://liminal-realm-qvmd.here.now**,
-  also mounted at the root of **https://freshpawsdogwash.com/** (mount_path `""`).
-  (booking page: `/book`, vaccinations page: `/vaccinations`). Live version: `01M4Y3JBWVVRX60V00MFYEVBNP`.
+   also mounted at the root of **https://freshpawsdogwash.com/** (mount_path `""`).
+   (booking page: `/book`, vaccinations page: `/vaccinations`). Live version: `01M4Y52FCB1SZJA9J8KNPDNWNN`.
 - Admin slug: `dewy-sketch-h6k7` — canonical URL: **https://freshpawsdogwash.com/office/**
   (custom-domain mount `office` → slug `dewy-sketch-h6k7`). The bare `https://dewy-sketch-h6k7.here.now/`
   308-redirects there (set via `PUT /api/v1/publish/dewy-sketch-h6k7/primary-domain
@@ -183,7 +183,17 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
   Republish with `--overwrite` while iterating; once files stabilize, drop it.
 - **Proxy routes** (`admin/.herenow/proxy.json`, upstreams point at the public slug `liminal-realm-qvmd`):
   `GET /api/vaccine-records` → injects `Bearer ${ADMIN_RECORDS_KEY}`, rateLimit `30/hour/ip`;
-  `DELETE /api/vaccine-records/*` → injects same, upstream WITHOUT trailing `/*` (verified working).
+  `DELETE /api/vaccine-records/*` → injects same, upstream WITHOUT trailing `/*` (verified working);
+  `DELETE /api/vaccine-photo/*` → Cloudinary Admin API single-asset delete, header
+  `Authorization: ${CLOUDINARY_ADMIN_AUTH}` (value = `Basic base64(api_key:api_secret)`, server-side
+  variable pinned to `api.cloudinary.com`; secret NEVER in repo/chat — owner set it via direct API call).
+- **Dashboard Delete = record + photo.** `deleteRecord` parses the Cloudinary `public_id` from `card_url`
+  (`publicIdFromUrl` in `records.ts`, unit-tested incl. transformed URLs), DELETEs the photo first
+  (best effort: unparseable URLs / already-gone photos skip silently), then DELETEs the record. Works for
+  ALL records incl. pre-existing ones (no token needed — delete_token approach abandoned: tokens require a
+  preset toggle AND expire 10 min after upload). Discord copies are permanent (out of scope).
+  Anyone past the gate could technically address arbitrary public_ids — acceptable: IDs unguessable,
+  gate holders = owner team.
 - **Response shape**: list = `{"records":[{"id":"rec_...","data":{...fields...}},...]}` — fields nested under `data`; flattening lives in `admin/app/records.ts` (pure, exported).
 - **Dashboard**: `admin/app/dashboard.tsx` client component — table (Pet thumb + name/file, Owner, Contact, sortable Uploaded header w/ aria-sort, Open card, Delete w/ confirm), search by owner/pet/phone/email, skeleton loading, subtle `.state-box.note`, empty/empty-search states, database-icon brand header + favicon (app/icon.png), Refresh button. ≤760px the wide table becomes stacked per-record cards (no horizontal scroll). Loading fetch deferred via `setTimeout(...,0)` to satisfy `react-hooks/set-state-in-effect`. Data fetches are RELATIVE (`fetch("api/vaccine-records")`).
 - Gate login brute-force: repeated failed POSTs trigger a cooldown (~5 min) even for the right password — wait it out, don't hammer.

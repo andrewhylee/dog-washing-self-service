@@ -7,6 +7,7 @@ import {
   filterRecords,
   normalizeRecord,
   pickList,
+  publicIdFromUrl,
   sortRecords,
 } from "./records";
 
@@ -236,9 +237,19 @@ export default function Dashboard() {
       if (item.pet) label.push(item.pet);
       if (item.owner) label.push(`(${item.owner})`);
       const who = label.length ? ` for ${label.join(" ")}` : "";
-      if (!window.confirm(`Delete this vaccination record${who}? This cannot be undone.`)) return;
+      if (!window.confirm(`Delete this vaccination record${who}, including its stored photo? This cannot be undone.`)) return;
       setDeleting(item.id);
       try {
+        // Remove the Cloudinary photo first (best effort: unparseable URLs and
+        // already-gone photos simply skip this step).
+        const publicId = publicIdFromUrl(item.url);
+        if (publicId) {
+          try {
+            await fetch(`api/vaccine-photo/${encodeURIComponent(publicId)}`, { method: "DELETE" });
+          } catch {
+            // Photo deletion is best effort; the record delete below still runs.
+          }
+        }
         const res = await fetch(`api/vaccine-records/${encodeURIComponent(item.id)}`, { method: "DELETE" });
         if (res.status === 401 || res.status === 403) {
           setError("Delete denied — reload the page and try again.");

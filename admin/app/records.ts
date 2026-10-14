@@ -11,6 +11,20 @@ export type RecordItem = {
   ts: number;
 };
 
+/** Extract a Cloudinary public_id from a delivery URL (version + extension stripped). */
+export function publicIdFromUrl(url: string): string {
+  const m = /\/upload\/(.+)$/.exec(url || "");
+  if (!m) return "";
+  const parts = m[1].split("/").filter(Boolean);
+  const vIdx = parts.findIndex((p) => /^v\d+$/.test(p));
+  const tail = vIdx >= 0 ? parts.slice(vIdx + 1) : parts;
+  if (tail.length === 0) return "";
+  const last = tail[tail.length - 1].replace(/\.[^.]+$/, "");
+  const id = [...tail.slice(0, -1), last].filter(Boolean).join("/");
+  if (!id || id.includes("..")) return "";
+  return id;
+}
+
 export function pickList(payload: unknown): RawRecord[] {
   if (Array.isArray(payload)) return payload as RawRecord[];
   if (!payload || typeof payload !== "object") return [];
