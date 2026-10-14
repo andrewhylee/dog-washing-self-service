@@ -371,7 +371,7 @@ export function VaccineForm() {
 
             <p className="vaccine-note">
               <CheckIcon />
-              <span>NYC Health Code requires us to keep proof of vaccinations on file before grooming your pup. Your card goes straight to our team — it’s never posted publicly.</span>
+              <span>NYC law requires every dog 4 months and older to be currently vaccinated against rabies, and our shared tubs require current distemper + parvovirus and Bordetella too. Your card goes straight to our team — it’s never posted publicly.</span>
             </p>
 
             <div className="booking-button-row">

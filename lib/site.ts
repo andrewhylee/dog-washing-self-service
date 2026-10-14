@@ -99,7 +99,7 @@ export const faqs = [
   {
     question: "Are vaccine records required?",
     answer:
-      "Yes. NYC Health Code requires proof of current Rabies, Distemper, and Bordetella vaccinations on file before your dog enters the facility. You can upload your pup’s vaccine card online before your visit — it takes about a minute, no account needed. Just look for the \u201cSkip the line at check-in\u201d section above, or bring the card when you come in.",
+      "Yes. NYC law requires every dog 4 months and older to be currently vaccinated against rabies, and our shared tubs also require current distemper + parvovirus and Bordetella (kennel cough) on file before your dog’s first wash. You can upload your pup’s vet-issued rabies certificate or vet vaccination record online before your visit — it takes about a minute, no account needed. Just look for the \u201cSkip the line at check-in\u201d section above, or bring the card when you come in.",
   },
   {
     question: "What about sick pets?",

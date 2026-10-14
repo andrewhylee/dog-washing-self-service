@@ -1,13 +1,13 @@
 :root {
   --navy: #0b1f2b;
   --navy-soft: #284553;
-  --teal: #076c70;
-  --teal-dark: #075f62;
-  --tub-blue: #d9f5f2;
-  --orange: #f9a8d4;
-  --orange-dark: #d15d8d;
+  --rose: #b0618f;
+  --rose-dark: #8a4570;
+  --lavender-mist: #ece5f9;
+  --pink: #f9a8d4;
+  --pink-dark: #d15d8d;
   --soap: #fffdf7;
-  --lime: #fde68a;
+  --periwinkle: #d3bdff;
   --white: #ffffff;
   --line: rgba(20, 43, 59, 0.18);
   --shadow: 0 24px 70px rgba(20, 43, 59, 0.12);
@@ -59,7 +59,7 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid var(--orange);
+  outline: 3px solid var(--pink);
   outline-offset: 4px;
 }
 
@@ -111,7 +111,7 @@ svg {
 }
 
 .concept-bar span:first-child {
-  color: var(--lime);
+  color: var(--periwinkle);
 }
 
 .concept-detail::before {
@@ -202,7 +202,7 @@ svg {
   bottom: -5px;
   left: 0;
   height: 2px;
-  background: var(--orange);
+  background: var(--pink);
   content: "";
   transform: scaleX(0);
   transform-origin: left;
@@ -246,7 +246,7 @@ svg {
 }
 
 .button-primary {
-  background: var(--orange);
+  background: var(--pink);
   color: var(--navy);
   box-shadow: 0 8px 0 var(--navy);
 }
@@ -315,7 +315,7 @@ svg {
 
 .mobile-menu nav a:last-child {
   border: 0;
-  background: var(--lime);
+  background: var(--periwinkle);
 }
 
 .hero {
@@ -334,7 +334,7 @@ svg {
   right: -140px;
   width: 380px;
   height: 380px;
-  border: 54px solid var(--tub-blue);
+  border: 54px solid var(--lavender-mist);
   border-radius: 50%;
   content: "";
   opacity: 0.7;
@@ -356,7 +356,7 @@ svg {
   align-items: center;
   gap: 9px;
   margin: 0 0 18px;
-  color: var(--teal-dark);
+  color: var(--rose-dark);
   font-size: 0.72rem;
   font-weight: 850;
   letter-spacing: 0.12em;
@@ -368,14 +368,14 @@ svg {
   height: 11px;
   border: 3px solid var(--navy);
   border-radius: 50%;
-  background: var(--lime);
+  background: var(--periwinkle);
 }
 
 .eyebrow-dark { color: var(--navy); }
 
 /* Hero self-serve emphasis: marker highlight in the lede. */
 .lede-mark {
-  background: var(--lime);
+  background: var(--periwinkle);
   color: var(--navy);
   padding: 0 8px;
   border-radius: 6px;
@@ -407,7 +407,7 @@ h3 {
 
 .hero h1 span {
   display: block;
-  color: var(--teal);
+  color: var(--rose);
 }
 
 .hero-lede {
@@ -438,7 +438,7 @@ h3 {
   place-items: center;
   border: 2px solid var(--navy);
   border-radius: 50%;
-  background: var(--lime);
+  background: var(--periwinkle);
   color: var(--navy);
   transition: transform 160ms ease, background 160ms ease;
 }
@@ -477,7 +477,7 @@ h3 {
 }
 
 .art-arch {
-  fill: var(--tub-blue);
+  fill: var(--lavender-mist);
   stroke: var(--navy);
   stroke-width: 5px;
 }
@@ -495,9 +495,9 @@ h3 {
 .dog-mouth { fill: none; stroke: var(--navy); stroke-linecap: round; stroke-width: 5px; }
 .dog-tongue { fill: #ff8a8a; stroke: var(--navy); stroke-width: 4px; }
 .tub-back { fill: var(--white); stroke: var(--navy); stroke-width: 7px; }
-.tub-front { fill: var(--teal); stroke: var(--navy); stroke-width: 7px; }
+.tub-front { fill: var(--rose); stroke: var(--navy); stroke-width: 7px; }
 .tub-rim { fill: none; stroke: var(--navy); stroke-linecap: round; stroke-width: 14px; }
-.tub-dot { fill: var(--lime); stroke: var(--navy); stroke-width: 4px; }
+.tub-dot { fill: var(--periwinkle); stroke: var(--navy); stroke-width: 4px; }
 .tub-label { fill: var(--soap); stroke: var(--navy); stroke-width: 3px; rx: 8px; }
 .tub text { fill: var(--navy); font-family: var(--font-display), sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 2px; }
 
@@ -506,7 +506,7 @@ h3 {
   z-index: 3;
   border: 3px solid var(--navy);
   border-radius: 50%;
-  background: var(--lime);
+  background: var(--periwinkle);
   box-shadow: inset -5px -6px 0 rgba(20, 43, 59, 0.08);
   animation: bob 4s ease-in-out infinite;
 }
@@ -518,7 +518,7 @@ h3 {
 .art-spark {
   position: absolute;
   z-index: 4;
-  color: var(--orange);
+  color: var(--pink);
   font-size: 1.8rem;
 }
 
@@ -577,7 +577,7 @@ h3 {
   flex: 0 0 auto;
   place-items: center;
   border-radius: 50%;
-  background: var(--tub-blue);
+  background: var(--lavender-mist);
   font-family: var(--font-display), sans-serif;
   font-size: 0.72rem;
   font-weight: 850;
@@ -631,11 +631,11 @@ h3 {
   border: 2px solid var(--navy);
   border-radius: var(--radius-md);
   padding: 27px 24px;
-  background: var(--tub-blue);
+  background: var(--lavender-mist);
   box-shadow: 7px 7px 0 var(--navy);
 }
 
-.wash-step:nth-of-type(3) { background: var(--lime); }
+.wash-step:nth-of-type(3) { background: var(--periwinkle); }
 
 .step-number {
   width: 50px;
@@ -644,7 +644,7 @@ h3 {
   place-items: center;
   border: 2px solid var(--navy);
   border-radius: 50%;
-  background: var(--orange);
+  background: var(--pink);
   font-family: var(--font-display), sans-serif;
   font-size: 0.8rem;
   font-weight: 850;
@@ -691,7 +691,7 @@ h3 {
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: var(--lime);
+  background: var(--periwinkle);
   color: var(--navy);
   font-family: var(--font-display), sans-serif;
   font-size: 0.7rem;
@@ -727,9 +727,9 @@ h3 {
   flex: 0 0 auto;
   padding: 4px;
   border-radius: 50%;
-  background: var(--tub-blue);
+  background: var(--lavender-mist);
   fill: none;
-  stroke: var(--teal-dark);
+  stroke: var(--rose-dark);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 3;
@@ -741,7 +741,7 @@ h3 {
   overflow: hidden;
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-lg);
-  background-color: var(--teal);
+  background-color: var(--rose);
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px);
@@ -774,7 +774,7 @@ h3 {
   inset: 30px 22px 0;
   border: 7px solid var(--navy);
   border-radius: 48% 48% 42% 42%;
-  background: var(--lime);
+  background: var(--periwinkle);
 }
 
 .tile-ear {
@@ -784,7 +784,7 @@ h3 {
   width: 76px;
   height: 130px;
   border: 7px solid var(--navy);
-  background: var(--orange);
+  background: var(--pink);
 }
 
 .tile-ear.left { left: 0; border-radius: 48px 12px 40px 50px; transform: rotate(-25deg); }
@@ -807,7 +807,7 @@ h3 {
 
 .proof-section {
   overflow: hidden;
-  background: var(--tub-blue);
+  background: var(--lavender-mist);
 }
 
 .proof-heading {
@@ -831,7 +831,7 @@ h3 {
   border: 2px solid var(--navy);
   border-radius: 22px;
   padding: 15px 18px;
-  background: var(--lime);
+  background: var(--periwinkle);
   box-shadow: 7px 7px 0 var(--navy);
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
@@ -856,7 +856,7 @@ h3 {
 
 .score-stars,
 .review-stars {
-  color: var(--orange-dark);
+  color: var(--pink-dark);
   font-size: 0.86rem;
   letter-spacing: 0.08em;
 }
@@ -948,7 +948,7 @@ h3 {
 }
 
 .review-card:nth-child(2) {
-  background: var(--lime);
+  background: var(--periwinkle);
 }
 
 .review-card-top {
@@ -1010,7 +1010,7 @@ h3 {
 }
 
 .pricing-section {
-  background: var(--orange);
+  background: var(--pink);
 }
 
 .pricing-grid {
@@ -1042,7 +1042,7 @@ h3 {
   display: inline-flex;
   border-radius: 999px;
   padding: 7px 12px;
-  background: var(--lime);
+  background: var(--periwinkle);
   font-size: 0.7rem;
   font-weight: 850;
   letter-spacing: 0.08em;
@@ -1059,7 +1059,7 @@ h3 {
   border-top: 2px solid var(--navy);
   border-bottom: 2px solid var(--navy);
   padding: 13px 0;
-  color: var(--teal-dark);
+  color: var(--rose-dark);
   font-family: var(--font-display), sans-serif;
   font-size: 1.15rem;
   font-weight: 800;
@@ -1083,19 +1083,19 @@ h3 {
 
 .vaccine-section { background: var(--navy); color: white; }
 .vaccine-grid { display: grid; gap: 36px; }
-.vaccine-copy .eyebrow { color: var(--lime); }
+.vaccine-copy .eyebrow { color: var(--periwinkle); }
 .vaccine-copy .section-copy { max-width: 560px; color: rgba(255, 255, 255, 0.82); }
 .vaccine-actions { display: flex; flex-wrap: wrap; gap: 16px; margin: 30px 0 20px; }
-.button-lime { background: var(--lime); color: var(--navy); box-shadow: 0 8px 0 rgba(255, 255, 255, 0.18); }
+.button-lime { background: var(--periwinkle); color: var(--navy); box-shadow: 0 8px 0 rgba(255, 255, 255, 0.18); }
 .button-lime:hover { box-shadow: 0 10px 0 rgba(255, 255, 255, 0.18); }
-.button-outline-light { border-color: var(--lime); background: transparent; color: white; }
+.button-outline-light { border-color: var(--periwinkle); background: transparent; color: white; }
 .vaccine-legalnote { margin: 0; color: rgba(255, 255, 255, 0.6); font-size: 0.82rem; }
 .vaccine-card { border-radius: var(--radius-lg); padding: 36px 27px; background: var(--soap); color: var(--navy); box-shadow: 12px 12px 0 rgba(255, 255, 255, 0.12); }
 .vaccine-card h3 { margin: 22px 0 0; font-family: var(--font-display), sans-serif; font-size: clamp(1.8rem, 6vw, 2.4rem); line-height: 1.05; }
 .vaccine-card .check-list { margin-top: 22px; }
 .vaccine-card-note { margin: 24px 0 0; border-top: 2px solid rgba(20, 43, 59, 0.15); padding-top: 16px; color: var(--navy-soft); font-size: 0.82rem; }
 .hours-note { max-width: 500px; display: flex; align-items: center; gap: 14px; border-top: 1px solid var(--line); padding-top: 22px; }
-.hours-note svg { width: 30px; height: 30px; fill: none; stroke: var(--teal); stroke-width: 2; }
+.hours-note svg { width: 30px; height: 30px; fill: none; stroke: var(--rose); stroke-width: 2; }
 .hours-note p { display: grid; margin: 0; line-height: 1.3; }
 .hours-note span { margin-top: 5px; color: var(--navy-soft); font-size: 0.82rem; }
 
@@ -1106,7 +1106,7 @@ h3 {
   overflow: hidden;
   border: 3px solid var(--navy);
   border-radius: var(--radius-lg);
-  background: var(--tub-blue);
+  background: var(--lavender-mist);
   box-shadow: 11px 11px 0 var(--navy);
 }
 
@@ -1114,28 +1114,28 @@ h3 {
 .road-a { top: 0; bottom: 0; left: 39%; width: 56px; transform: rotate(9deg); }
 .road-b { top: 31%; right: 0; left: 0; height: 50px; transform: rotate(-6deg); }
 .road-c { top: 0; right: 17%; width: 36px; height: 100%; transform: rotate(-18deg); }
-.map-block { position: absolute; display: block; border: 2px solid var(--navy); border-radius: 10px; background: var(--lime); opacity: 0.8; }
+.map-block { position: absolute; display: block; border: 2px solid var(--navy); border-radius: 10px; background: var(--periwinkle); opacity: 0.8; }
 .block-a { top: 9%; left: 7%; width: 94px; height: 72px; transform: rotate(-7deg); }
 .block-b { right: 6%; bottom: 12%; width: 102px; height: 90px; transform: rotate(7deg); }
-.block-c { bottom: 7%; left: 8%; width: 74px; height: 56px; transform: rotate(4deg); background: var(--orange); }
-.map-pin { position: absolute; top: 46%; left: 52%; width: 70px; height: 70px; display: grid; place-items: center; border: 3px solid var(--navy); border-radius: 50% 50% 50% 10%; background: var(--orange); box-shadow: 5px 5px 0 var(--navy); transform: translate(-50%, -50%) rotate(-45deg); }
+.block-c { bottom: 7%; left: 8%; width: 74px; height: 56px; transform: rotate(4deg); background: var(--pink); }
+.map-pin { position: absolute; top: 46%; left: 52%; width: 70px; height: 70px; display: grid; place-items: center; border: 3px solid var(--navy); border-radius: 50% 50% 50% 10%; background: var(--pink); box-shadow: 5px 5px 0 var(--navy); transform: translate(-50%, -50%) rotate(-45deg); }
 .map-pin svg { width: 35px; height: 35px; fill: none; stroke: var(--navy); stroke-width: 2; transform: rotate(45deg); }
 .map-caption { position: absolute; right: 18px; bottom: 18px; left: 18px; display: grid; border: 2px solid var(--navy); border-radius: 14px; padding: 14px 17px; background: var(--soap); line-height: 1.2; }
 .map-caption strong { font-family: var(--font-display), sans-serif; font-size: 1.15rem; }
 .map-caption small { margin-top: 5px; }
 
-.faq-section { background: var(--teal); color: white; }
+.faq-section { background: var(--rose); color: white; }
 .faq-grid { display: grid; gap: 38px; }
-.faq-section .eyebrow { color: var(--lime); }
+.faq-section .eyebrow { color: var(--periwinkle); }
 .faq-list { border-top: 2px solid rgba(255, 255, 255, 0.7); }
 .faq-list details { border-bottom: 2px solid rgba(255, 255, 255, 0.7); }
 .faq-list summary { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px 0; font-family: var(--font-display), sans-serif; font-size: 1.12rem; font-weight: 720; line-height: 1.2; cursor: pointer; list-style: none; }
 .faq-list summary::-webkit-details-marker { display: none; }
 .faq-list summary span { width: 34px; height: 34px; display: grid; flex: 0 0 auto; place-items: center; border: 2px solid white; border-radius: 50%; font-family: var(--font-body), sans-serif; font-size: 1.35rem; font-weight: 400; transition: transform 180ms ease, background 180ms ease; }
-.faq-list details[open] summary span { background: var(--lime); color: var(--navy); transform: rotate(45deg); }
+.faq-list details[open] summary span { background: var(--periwinkle); color: var(--navy); transform: rotate(45deg); }
 .faq-list details p { max-width: 650px; margin: -4px 0 24px; color: rgba(255, 255, 255, 0.86); font-size: 0.95rem; }
 
-.final-cta { padding: 70px 0; background: var(--orange); }
+.final-cta { padding: 70px 0; background: var(--pink); }
 .final-cta-inner > p { margin-bottom: 40px; font-size: 0.76rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
 .final-cta-inner > p.final-cta-mission {
   max-width: 640px;
@@ -1186,10 +1186,10 @@ h3 {
 }
 
 .mobile-sticky a { min-height: 55px; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 12px; font-size: 0.76rem; font-weight: 850; }
-.mobile-sticky a.vaccine-link { background: var(--orange); }
+.mobile-sticky a.vaccine-link { background: var(--pink); }
 
 /* Booking demo */
-.booking-page { min-height: 100vh; padding-bottom: 64px; background: var(--tub-blue); }
+.booking-page { min-height: 100vh; padding-bottom: 64px; background: var(--lavender-mist); }
 .booking-header { min-height: 92px; display: flex; align-items: center; justify-content: space-between; }
 .booking-close { width: 48px; height: 48px; display: grid; place-items: center; border: 2px solid var(--navy); border-radius: 50%; background: var(--soap); font-size: 1.8rem; line-height: 1; }
 .booking-page-grid { display: grid; gap: 42px; }
@@ -1210,9 +1210,9 @@ h3 {
 
 .booking-progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 18px 20px 0; }
 .booking-progress span { height: 6px; border-radius: 999px; background: rgba(20, 43, 59, 0.12); }
-.booking-progress span.active { background: var(--teal); }
+.booking-progress span.active { background: var(--rose); }
 .booking-step { padding: 26px 22px 28px; }
-.step-label { margin-bottom: 7px; color: var(--teal-dark); font-size: 0.68rem; font-weight: 850; letter-spacing: 0.1em; text-transform: uppercase; }
+.step-label { margin-bottom: 7px; color: var(--rose-dark); font-size: 0.68rem; font-weight: 850; letter-spacing: 0.1em; text-transform: uppercase; }
 .booking-step h2 { margin-bottom: 8px; font-size: clamp(2.3rem, 9vw, 3.5rem); }
 .booking-helper { margin-bottom: 28px; color: var(--navy-soft); font-size: 0.82rem; }
 .booking-step fieldset { margin: 0 0 24px; padding: 0; border: 0; }
@@ -1223,27 +1223,27 @@ h3 {
 .date-options span { font-size: 0.62rem; font-weight: 760; text-transform: uppercase; }
 .date-options strong { font-family: var(--font-display), sans-serif; font-size: 1.2rem; }
 .date-options strong, .time-options button { font-variant-numeric: tabular-nums; }
-.date-options button.selected, .time-options button.selected { border-color: var(--navy); background: var(--lime); box-shadow: 3px 3px 0 var(--navy); }
+.date-options button.selected, .time-options button.selected { border-color: var(--navy); background: var(--periwinkle); box-shadow: 3px 3px 0 var(--navy); }
 .time-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 .time-options button { min-height: 48px; font-size: 0.77rem; font-weight: 760; }
 
 .calendar-switcher { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px; }
 .calendar-switcher button { padding: 11px 10px; border: 2px solid rgba(20, 43, 59, 0.14); border-radius: 12px; background: white; color: var(--navy-soft); font-size: 0.78rem; font-weight: 820; cursor: pointer; }
-.calendar-switcher button.selected { border-color: var(--navy); background: var(--teal); color: white; }
+.calendar-switcher button.selected { border-color: var(--navy); background: var(--rose); color: white; }
 
 .calendar-grid { display: grid; gap: 4px; }
 .calendar-head-row, .calendar-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 .calendar-weekday { padding: 4px 0 7px; color: var(--navy-soft); font-size: 0.62rem; font-weight: 820; text-align: center; text-transform: uppercase; }
 .calendar-day { min-height: 40px; border: 2px solid rgba(20, 43, 59, 0.12); border-radius: 9px; background: white; color: var(--navy); font-size: 0.78rem; font-weight: 700; cursor: pointer; font-variant-numeric: tabular-nums; }
 .calendar-day:hover:not(.disabled) { border-color: var(--navy); }
-.calendar-day.today { outline: 2px solid var(--teal); outline-offset: -2px; }
-.calendar-day.selected { border-color: var(--navy); background: var(--lime); box-shadow: 3px 3px 0 var(--navy); }
+.calendar-day.today { outline: 2px solid var(--rose); outline-offset: -2px; }
+.calendar-day.selected { border-color: var(--navy); background: var(--periwinkle); box-shadow: 3px 3px 0 var(--navy); }
 .calendar-day.disabled { color: rgba(20, 43, 59, 0.3); background: rgba(20, 43, 59, 0.04); cursor: not-allowed; }
 .calendar-empty { min-height: 40px; }
 
 .time-prompt { margin-bottom: 0; }
 .visiting-loading { display: flex; align-items: center; gap: 8px; font-weight: 760; color: var(--navy-soft); margin-bottom: 12px; }
-.visiting-loading::before { content: ""; width: 14px; height: 14px; border: 2px solid rgba(20,43,59,0.25); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.7s linear infinite; flex: none; }
+.visiting-loading::before { content: ""; width: 14px; height: 14px; border: 2px solid rgba(20,43,59,0.25); border-top-color: var(--rose); border-radius: 50%; animation: spin 0.7s linear infinite; flex: none; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .time-skeleton { min-height: 48px; border-radius: 14px; background: linear-gradient(90deg, rgba(20,43,59,0.08) 25%, rgba(20,43,59,0.16) 50%, rgba(20,43,59,0.08) 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; }
 @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
@@ -1256,8 +1256,8 @@ h3 {
 .booking-next { width: 100%; margin-top: 4px; }
 .field-label span { color: rgba(20, 43, 59, 0.5); font-weight: 500; }
 .booking-step input { width: 100%; min-height: 58px; border: 2px solid var(--navy); border-radius: 14px; padding: 12px 16px; background: white; color: var(--navy); font-size: 1rem; }
-.field-error { margin-top: 6px; color: var(--orange-dark); font-size: 0.76rem; font-weight: 700; }
-.service-choice { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; margin-top: 28px; border: 2px solid var(--navy); border-radius: 16px; padding: 16px; background: var(--tub-blue); }
+.field-error { margin-top: 6px; color: var(--pink-dark); font-size: 0.76rem; font-weight: 700; }
+.service-choice { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; margin-top: 28px; border: 2px solid var(--navy); border-radius: 16px; padding: 16px; background: var(--lavender-mist); }
 .service-check { align-self: start; }
 .service-choice > div { display: grid; line-height: 1.25; }
 .service-choice small { margin-top: 5px; color: var(--navy-soft); font-size: 0.7rem; }
@@ -1267,25 +1267,28 @@ h3 {
 .booking-button-row .button-primary:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
 
 .time-options button.full { color: rgba(20, 43, 59, 0.4); background: rgba(20, 43, 59, 0.05); border-color: rgba(20, 43, 59, 0.1); cursor: not-allowed; }
-.time-options button.last-spot { border-color: rgba(7, 108, 112, 0.5); }
+.time-options button.last-spot { border-color: rgba(176, 97, 143, 0.5); }
 .time-options button .slot-label { display: block; font-size: 0.58rem; font-weight: 760; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
-.time-options button.full .slot-label { color: var(--orange-dark); }
-.time-options button.last-spot .slot-label { color: var(--teal); }
+.time-options button.full .slot-label { color: var(--pink-dark); }
+.time-options button.last-spot .slot-label { color: var(--rose); }
 
-.slot-full-note { color: var(--orange-dark); font-weight: 700; }
-.slot-last-note { color: var(--teal); font-weight: 700; }
+.slot-full-note { color: var(--pink-dark); font-weight: 700; }
+.slot-last-note { color: var(--rose); font-weight: 700; }
 
-.booking-error { margin-top: 14px; padding: 11px 14px; border: 2px solid rgba(209, 93, 141, 0.35); border-radius: 12px; background: rgba(249, 168, 212, 0.12); color: var(--orange-dark); font-size: 0.8rem; font-weight: 700; }
+.booking-error { margin-top: 14px; padding: 11px 14px; border: 2px solid rgba(209, 93, 141, 0.35); border-radius: 12px; background: rgba(249, 168, 212, 0.12); color: var(--pink-dark); font-size: 0.8rem; font-weight: 700; }
 .booking-fields input { margin-bottom: 22px; }
 .booking-fields input:last-of-type { margin-bottom: 0; }
 .button-ghost { border-color: var(--navy); background: transparent; color: var(--navy); }
 .booking-review { text-align: center; }
-.review-dog { width: 80px; height: 80px; display: grid; place-items: center; margin: 20px auto; border: 2px solid var(--navy); border-radius: 50%; background: var(--lime); font-size: 2rem; box-shadow: 5px 5px 0 var(--navy); }
+.review-dog { width: 80px; height: 80px; display: grid; place-items: center; margin: 20px auto; border: 2px solid var(--navy); border-radius: 50%; background: var(--periwinkle); font-size: 2rem; box-shadow: 5px 5px 0 var(--navy); }
 .booking-review dl { margin: 28px 0 0; border-top: 1px solid var(--line); text-align: left; }
 .booking-review dl div { display: flex; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); padding: 12px 0; }
 .booking-review dt { color: var(--navy-soft); font-size: 0.76rem; }
 .booking-review dd { margin: 0; font-size: 0.78rem; font-weight: 780; text-align: right; }
-.demo-notice { display: grid; margin-top: 22px; border-radius: 14px; padding: 14px; background: var(--tub-blue); line-height: 1.3; text-align: left; }
+.demo-notice { display: grid; margin-top: 22px; border-radius: 14px; padding: 14px; background: var(--lavender-mist); line-height: 1.3; text-align: left; }
+.intro-notice { display: grid; gap: 6px; margin-top: 16px; border: 2px solid var(--navy); border-radius: 16px; padding: 16px 18px; background: var(--white); box-shadow: 5px 5px 0 var(--navy); line-height: 1.4; text-align: left; }
+.intro-notice strong { font-size: 0.85rem; }
+.intro-notice span { font-size: 0.78rem; color: var(--navy-soft); }
 .demo-notice strong { font-size: 0.8rem; }
 .demo-notice span { margin-top: 4px; font-size: 0.7rem; }
 .booking-review .review-dog svg { width: 34px; height: 34px; fill: none; stroke: var(--navy); stroke-width: 2.5; }
@@ -1308,14 +1311,14 @@ h3 {
 .vaccine-step input[type="text"]:focus,
 .vaccine-step input[type="tel"]:focus,
 .vaccine-step input[type="email"]:focus {
-  border-color: var(--teal);
+  border-color: var(--rose);
   outline: none;
-  box-shadow: 0 0 0 4px rgba(7, 108, 112, 0.14);
+  box-shadow: 0 0 0 4px rgba(176, 97, 143, 0.14);
 }
 .vaccine-step input[type="text"]:focus-visible,
 .vaccine-step input[type="tel"]:focus-visible,
 .vaccine-step input[type="email"]:focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2px solid var(--rose);
   outline-offset: 2px;
 }
 .vaccine-step .field-label {
@@ -1343,7 +1346,7 @@ h3 {
   border: 2px dashed rgba(20, 43, 59, 0.3);
   border-radius: 16px;
   padding: 18px;
-  background: rgba(7, 108, 112, 0.04);
+  background: rgba(176, 97, 143, 0.04);
   cursor: pointer;
   transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
@@ -1352,8 +1355,8 @@ h3 {
 }
 .vaccine-upload.has-file {
   border-style: solid;
-  border-color: var(--teal);
-  background: var(--lime);
+  border-color: var(--rose);
+  background: var(--periwinkle);
 }
 .vaccine-upload-input {
   position: absolute;
@@ -1367,15 +1370,15 @@ h3 {
   cursor: pointer;
 }
 .vaccine-upload:focus-within {
-  border-color: var(--teal);
-  box-shadow: 0 0 0 4px rgba(7, 108, 112, 0.14);
+  border-color: var(--rose);
+  box-shadow: 0 0 0 4px rgba(176, 97, 143, 0.14);
 }
 .vaccine-upload svg {
   width: 22px;
   height: 22px;
   margin-bottom: 4px;
   fill: none;
-  stroke: var(--teal);
+  stroke: var(--rose);
   stroke-width: 2.5;
 }
 .vaccine-upload strong {
@@ -1409,7 +1412,7 @@ h3 {
   flex: none;
   margin-top: 1px;
   fill: none;
-  stroke: var(--teal);
+  stroke: var(--rose);
   stroke-width: 2.5;
 }
 
@@ -1425,8 +1428,8 @@ h3 {
   .wash-steps { grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .wash-step { grid-template-columns: 1fr; }
   .wash-step:nth-of-type(3) { transform: translateY(24px); }
-  .bubble-route { position: absolute; z-index: 1; top: -30px; right: 3%; left: 3%; height: 110px; display: block; border-top: 4px dashed var(--teal); border-radius: 50%; }
-  .bubble-route span { position: absolute; width: 20px; height: 20px; border: 3px solid var(--navy); border-radius: 50%; background: var(--lime); }
+  .bubble-route { position: absolute; z-index: 1; top: -30px; right: 3%; left: 3%; height: 110px; display: block; border-top: 4px dashed var(--rose); border-radius: 50%; }
+  .bubble-route span { position: absolute; width: 20px; height: 20px; border: 3px solid var(--navy); border-radius: 50%; background: var(--periwinkle); }
   .bubble-route span:first-child { top: -13px; left: 15%; }
   .bubble-route span:nth-child(2) { top: -37px; left: 50%; width: 30px; height: 30px; }
   .bubble-route span:last-child { top: -7px; right: 13%; width: 15px; height: 15px; }
