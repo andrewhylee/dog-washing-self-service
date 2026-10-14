@@ -90,21 +90,25 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
   the record keeps the original `file.name`. PDFs skip conversion. If the WebP POST is rejected,
   the form retries once with the original so uploads never hard-fail on preset config.
 - **Cloudinary preset findings (dog_wash, console `zjq8kp0w`) — READ BEFORE TOUCHING:**
-  (a) The preset initially rejected webp (`400 "Image file format webp not allowed"`, seen live) — webp
-  uploads now succeed (93 KB `.webp` stored 2026-10-14), so someone has since allowed it.
-  (b) A 4.1 MB iPhone `IMG_4007.jpeg` was stored as a **3.6 MB PNG** — our code never emits PNG, so the
-  preset must/must-have-had a server-side format conversion (JPG→PNG recompression also explains the
-  earlier 4.1→3.5 MB report). Ideal end-state: allowed formats include jpg/png/webp/heic/pdf, NO format
-  conversion, NO incoming transformation (client already guarantees ≤100 KB; every preset transform is
-  dead weight). If dashboard ever again shows MB-sized files for new uploads, re-check the preset screen.
+  The same `IMG_4007.jpeg` (4.1 MB iPhone photo) was uploaded 4x on 2026-10-14 (Te 20:18, Eheh 20:30,
+  Ii 20:35, Yu 20:37 UTC) and stored as PNG every time — 3.6 MB once, then 1.6 MB byte-identical 3x.
+  Our code cannot emit PNG (only canvas-WebP or original bytes verbatim), so a preset-side format
+  conversion was active, with parameters changing mid-window. In the same window webp uploads went from
+  `400 "format webp not allowed"` to accepted (93 KB `.webp` stored ~20:40). Conclusion: the preset was
+  edited live during testing. HEIC itself was never the problem: the form accepts heic/heif
+  (`ALLOWED_TYPES` + input `accept`), and a live HEIC probe returned 200, stored `.heic`, delivered as
+  `f_webp` (120 KB → 105 KB). Note an unacceptable format yields a 400 error, never a PNG.
+  Ideal end-state (verified working ~20:40): allowed formats include jpg/png/webp/heic/pdf, NO format
+  conversion, NO incoming transformation. If dashboard ever again shows MB-sized PNGs for new uploads,
+  someone edited the preset — re-check its screen.
 - Preset incoming-transformation idea DECLINED 2026-10-14 (owner decision, simplicity).
 - **Cloudinary preset action (owner, console `zjq8kp0w` → Upload preset `dog_wash`):**
   REQUIRED: **Allowed formats must include webp** (was rejected with 400 on 2026-10-14; uploads now
   succeed, so this appears resolved — confirm it stays). See preset-findings note above for the
   JPG→PNG conversion mystery: make sure no format conversion / incoming transformation is set.
-- Records currently: 4 — mew/Johnny Bravo + ppo/pp (migrated Sep), Keke/"Testing Tester" (owner's live-form
-  test 2026-10-14 19:54 UTC), Te/Mo Mi `IMG_4007.jpeg` (owner's 4.1 MB iPhone test 20:18 UTC, stored as 3.6 MB
-  PNG by preset conversion — see findings above). Keke + Te are NOT agent-created: do NOT delete without asking.
+- Records currently: 7 — mew/Johnny Bravo + ppo/pp (migrated Sep, REAL DATA), plus 5 owner live-form
+  tests 2026-10-14 (Keke 19:54; Te/Eheh/Ii/Yu 20:18–20:37, all the same `IMG_4007.jpeg`): NOT agent-created,
+  do NOT delete without asking. All agent zzz-* probes created and deleted same day.
 
 ## Homepage section order (current)
 
