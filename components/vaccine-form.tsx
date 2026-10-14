@@ -9,10 +9,48 @@ const PHONE_RE = /^(\d{10}|\d{3}-\d{3}-\d{4})$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/heic", "image/heif", "application/pdf"];
 const MAX_FILE_MB = 5;
+// Aggressive-but-readable photo target: phone photos land ~100-250 KB as WebP.
+const WEBP_MAX_EDGE = 1600;
+const WEBP_QUALITY = 0.65;
 
 function formatBytes(bytes: number) {
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+/**
+ * Shrink a photo to a small WebP before upload. Returns the original file when
+ * conversion isn't possible (PDFs, or formats the browser can't decode such as
+ * HEIC outside Safari) so the established server-side flow still handles them.
+ */
+async function convertToWebp(file: File): Promise<{ blob: Blob; fileName: string; mimeType: string }> {
+  const fallback = { blob: file, fileName: file.name, mimeType: file.type };
+  if (file.type === "application/pdf" || file.type === "image/webp") return fallback;
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch {
+    return fallback;
+  }
+  try {
+    const scale = Math.min(1, WEBP_MAX_EDGE / Math.max(bitmap.width, bitmap.height));
+    const width = Math.max(1, Math.round(bitmap.width * scale));
+    const height = Math.max(1, Math.round(bitmap.height * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return fallback;
+    ctx.drawImage(bitmap, 0, 0, width, height);
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/webp", WEBP_QUALITY)
+    );
+    if (!blob) return fallback;
+    const base = file.name.replace(/\.[^.]+$/, "") || "vaccine-card";
+    return { blob, fileName: `${base}.webp`, mimeType: "image/webp" };
+  } finally {
+    bitmap.close();
+  }
 }
 
 export function VaccineForm() {
@@ -99,24 +137,40 @@ export function VaccineForm() {
         `record_format=${encodeURIComponent(file.type)}`,
       ].join("|");
       const cloudinaryBody = new FormData();
-      cloudinaryBody.append("file", file);
+      // Shrink photos to WebP first (skipped for PDFs / undecodable files).
+      // Discord still receives the original for full fidelity.
+      let upload = await convertToWebp(file);
+      cloudinaryBody.append("file", upload.blob, upload.fileName);
       cloudinaryBody.append("upload_preset", "dog_wash");
       cloudinaryBody.append("context", context);
       cloudinaryBody.append("tags", form.petName.trim());
-      const cloudRes = await fetch("/api/upload", {
+      let cloudRes = await fetch("/api/upload", {
         method: "POST",
         body: cloudinaryBody,
       });
+      if (!cloudRes.ok && upload.mimeType === "image/webp") {
+        // Preset may not allow webp (yet) — retry once with the original.
+        upload = { blob: file, fileName: file.name, mimeType: file.type };
+        const retryBody = new FormData();
+        retryBody.append("file", file);
+        retryBody.append("upload_preset", "dog_wash");
+        retryBody.append("context", context);
+        retryBody.append("tags", form.petName.trim());
+        cloudRes = await fetch("/api/upload", {
+          method: "POST",
+          body: retryBody,
+        });
+      }
       if (!cloudRes.ok) {
         throw new Error("Uploading the card failed. Please try again.");
       }
       const cloudData = (await cloudRes.json()) as { secure_url?: string };
       let cardUrl = cloudData.secure_url ?? "";
-      if (cardUrl) {
+      if (cardUrl && upload.mimeType !== "image/webp") {
         if (file.type === "application/pdf") {
-          cardUrl = cardUrl.replace("/image/upload/", "/image/upload/pg_1/f_jpg/");
+          cardUrl = cardUrl.replace("/image/upload/", "/image/upload/pg_1/f_webp/");
         } else if (file.type === "image/heic" || file.type === "image/heif") {
-          cardUrl = cardUrl.replace("/image/upload/", "/image/upload/f_jpg/");
+          cardUrl = cardUrl.replace("/image/upload/", "/image/upload/f_webp/");
         }
       }
 
@@ -293,7 +347,7 @@ export function VaccineForm() {
                 ) : (
                   <>
                     <strong>Tap to upload a vaccine card</strong>
-                    <span>Photo (JPG, PNG, HEIC) or PDF · up to 5 MB</span>
+                    <span>Photo (JPG, PNG, HEIC) or PDF · up to 5 MB · photos shrunk automatically</span>
                   </>
                 )}
               </label>

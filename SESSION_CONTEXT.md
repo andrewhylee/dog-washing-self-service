@@ -80,9 +80,21 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 
 - Upload limit **5 MB** (`MAX_FILE_MB` in `components/vaccine-form.tsx`; copy in form + `/vaccinations` page).
   Fits Cloudinary free (10 MB/file) and Discord webhook (20 MB/file) caps.
-- Flow: browser → `/api/upload` (Cloudinary, returns `secure_url`; PDF→first-page-JPG and HEIC→JPG
-  transform rewrites for thumbnails) → `/api/discord` (team copy with attachment) → `/api/vaccine`
+- Flow: browser → `/api/upload` (Cloudinary, returns `secure_url`; PDF→first-page preview and HEIC→preview
+  delivery rewrites) → `/api/discord` (team copy with attachment) → `/api/vaccine`
   (metadata + `card_url` into owner-only `vaccine_records`). here.now stores only the URL string.
+- **Photo shrink (2026-10-14, aggressive: 1600px long edge, WebP q65 → ~100-250 KB)**: `convertToWebp()`
+  in `components/vaccine-form.tsx` converts JPEG/PNG (and HEIC where the browser can decode it) to WebP
+  via canvas before the Cloudinary upload; Discord still gets the original; the record keeps the original
+  `file.name`. PDFs skip conversion. If the WebP POST is rejected, the form retries once with the original
+  so uploads never hard-fail on preset config.
+- **Cloudinary preset action REQUIRED (owner, console `zjq8kp0w` → Upload preset `dog_wash`):**
+  preset currently rejects webp (`400 "Image file format webp not allowed"`), so converted uploads fall
+  back to originals until fixed. In the preset set **Allowed formats += webp** AND incoming transformation
+  `w_1600,c_limit / f_webp / q_65` (covers PDFs + HEIC fallbacks at rest). After the change, re-run the
+  upload matrix (large JPG → stored `format: webp`; HEIC; PDF) and delete the test records.
+- Records currently: 3 (mew/Johnny Bravo, ppo/pp — migrated; Keke/"Testing Tester" — appeared 2026-10-14
+  19:54 UTC, looks like the owner's own live-form test, NOT agent-created: do NOT delete without asking).
 
 ## Homepage section order (current)
 
@@ -125,7 +137,6 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - Custom domain `freshpawsdogwash.com` connected same day: root → public site, `/office/` → admin
   (admin rebuilt with `basePath: "/office"`; slug 308-redirects to the mount). Admin e2e **21/21 PASS**
   on the mount (`npm run qa:admin`, targets `https://freshpawsdogwash.com/office/`).
-- Records currently: 2 (mew/Johnny Bravo, ppo/pp) — real data, do NOT delete.
 - **Pending (owner, out of agent scope)**: do one real browser booking on the live site to confirm the Discord notification lands.
 - **CHANGE THE ADMIN PASSWORD** back to a real one before handing off (currently temp `testing111`)!
 - QA test may need the stale date / phone format check revisited.
