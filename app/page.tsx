@@ -29,7 +29,7 @@ export default function Home() {
                 <span>Happy hallway.</span>
               </h1>
               <p className="hero-lede">
-                A proper self-serve dog wash without the bathtub crouch, soaked towels, or bathroom cleanup.
+                A proper <span className="lede-mark">self-serve</span> dog wash without the bathtub crouch, soaked towels, or bathroom cleanup.
                 You wash your pup in our tubs with pro products — we provide everything and handle the mess.
               </p>
               <div className="hero-actions">

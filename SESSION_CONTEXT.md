@@ -159,7 +159,9 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
   via intercepted lab probes (no live side effects). Repo: `2d33c5f` + `c38ab96` + `dd05c10` + follow-ups.
 - Self-serve messaging (minimal pass): hero eyebrow + lede rewritten ("You wash your pup…"), new first FAQ
   ("Do you wash my dog for me?"), title tag → "Fresh Paws Self-Serve Dog Wash | Sunnyside, Queens".
-  H1 untouched (qa.mjs asserts on it). Live version `01M4Y8H9H0T69P6VS0PZBQPD6G`.
+  H1 untouched (qa.mjs asserts on it). Emphasis: lime `.lede-mark` highlight on "self-serve" in the lede
+  (eyebrow pill badge tried and reverted per owner taste — plain eyebrow kept). Live version
+  `01M4Y8T11V78Z8F5SD0CG1HWY4`.
 - **Pending (owner, out of agent scope)**: do one real browser booking on the live site to confirm the Discord notification lands.
 - **CHANGE THE ADMIN PASSWORD** back to a real one before handing off (currently temp `testing111`)!
 - Old here.now account: sites + bookings/availability data still there; delete whenever owner confirms.

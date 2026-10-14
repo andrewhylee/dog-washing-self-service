@@ -373,6 +373,15 @@ svg {
 
 .eyebrow-dark { color: var(--navy); }
 
+/* Hero self-serve emphasis: marker highlight in the lede. */
+.lede-mark {
+  background: var(--lime);
+  color: var(--navy);
+  padding: 0 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
 h1,
 h2,
 h3,
