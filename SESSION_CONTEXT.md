@@ -81,9 +81,11 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - Upload limit **5 MB** (`MAX_FILE_MB`; fits Cloudinary free 10 MB/file and Discord 20 MB/file caps).
 - Accepted upload formats: JPG, PNG, WebP, HEIC/HEIF, PDF (`ALLOWED_TYPES` + input `accept`,
   user copy names all four photo types). WebP inputs skip conversion (uploaded as-is; already optimal).
-- Flow: browser → `/api/upload` (Cloudinary, returns `secure_url`; PDF→first-page preview and HEIC→preview
-  delivery rewrites) → `/api/discord` (team copy with attachment) → `/api/vaccine`
-  (metadata + `card_url` into owner-only `vaccine_records`). here.now stores only the URL string.
+- Flow: browser shrinks photo → `/api/upload` (Cloudinary) + `/api/discord` (team copy, SAME shrunk
+  file — the 4 MB original is never uploaded anywhere) fly in parallel via one `Promise.all` (record POST
+  still waits on Cloudinary's URL; any leg failing aborts with its message, no record created).
+  Measured: both legs ~50 KB, fired 1 ms apart. Delivery rewrites: PDF→first-page preview, HEIC→preview.
+  here.now stores only the URL string.
 - **Photo shrink (2026-10-14, fast single pass: long edge ≤900px)**: `convertToWebp()`
   in `components/vaccine-form.tsx` does ONE canvas encode (never upscales; ships the encode only when it
   beats the original). Prefers WebP q65 (~50 KB), falls back to JPEG q0.7 (~77 KB) on browsers without a

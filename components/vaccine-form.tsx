@@ -152,17 +152,29 @@ export function VaccineForm() {
         `record_format=${encodeURIComponent(file.type)}`,
       ].join("|");
       const cloudinaryBody = new FormData();
-      // Shrink photos to WebP first (skipped for PDFs / undecodable files).
-      // Discord still receives the original for full fidelity.
+      // Shrink photos first (skipped for PDFs / undecodable files); the shrunk
+      // copy goes to BOTH Cloudinary and Discord so no multi-MB upload remains.
       let upload = await convertToWebp(file);
       cloudinaryBody.append("file", upload.blob, upload.fileName);
       cloudinaryBody.append("upload_preset", "dog_wash");
       cloudinaryBody.append("context", context);
       cloudinaryBody.append("tags", form.petName.trim());
-      let cloudRes = await fetch("/api/upload", {
-        method: "POST",
-        body: cloudinaryBody,
-      });
+      const content = [
+        "**🐾 New vaccination record**",
+        "",
+        `🐕 Pet's name: **${form.petName.trim()}**`,
+        `👤 Owner's name: **${form.firstName.trim()} ${form.lastName.trim()}**`,
+        `📞 Phone: ${form.phone.trim()}`,
+        `✉️ Email: ${form.email.trim()}`,
+      ].join("\n");
+      const discordBody = new FormData();
+      discordBody.append("content", content);
+      discordBody.append("file", upload.blob, upload.fileName);
+      // Independent uploads fly together; only the record depends on Cloudinary.
+      const [cloudResInit, discordRes] = await Promise.all([        fetch("/api/upload", { method: "POST", body: cloudinaryBody }),
+        fetch("/api/discord", { method: "POST", body: discordBody }),
+      ]);
+      let cloudRes = cloudResInit;
       if (!cloudRes.ok && upload.mimeType === "image/webp") {
         // Preset may not allow webp (yet) — retry once with the original.
         upload = { blob: file, fileName: file.name, mimeType: file.type };
@@ -179,6 +191,9 @@ export function VaccineForm() {
       if (!cloudRes.ok) {
         throw new Error("Uploading the card failed. Please try again.");
       }
+      if (!discordRes.ok) {
+        throw new Error("We couldn’t send your card to the team. Please try again.");
+      }
       const cloudData = (await cloudRes.json()) as { secure_url?: string };
       let cardUrl = cloudData.secure_url ?? "";
       if (cardUrl && upload.mimeType !== "image/webp") {
@@ -187,25 +202,6 @@ export function VaccineForm() {
         } else if (file.type === "image/heic" || file.type === "image/heif") {
           cardUrl = cardUrl.replace("/image/upload/", "/image/upload/f_webp/");
         }
-      }
-
-      const content = [
-        "**🐾 New vaccination record**",
-        "",
-        `🐕 Pet's name: **${form.petName.trim()}**`,
-        `👤 Owner's name: **${form.firstName.trim()} ${form.lastName.trim()}**`,
-        `📞 Phone: ${form.phone.trim()}`,
-        `✉️ Email: ${form.email.trim()}`,
-      ].join("\n");
-      const discordBody = new FormData();
-      discordBody.append("content", content);
-      discordBody.append("file", file);
-      const discordRes = await fetch("/api/discord", {
-        method: "POST",
-        body: discordBody,
-      });
-      if (!discordRes.ok) {
-        throw new Error("We couldn’t send your card to the team. Please try again.");
       }
 
       const record = {
