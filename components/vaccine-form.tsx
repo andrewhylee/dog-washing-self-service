@@ -7,7 +7,7 @@ import { ArrowIcon, CheckIcon } from "@/components/icons";
 
 const PHONE_RE = /^(\d{10}|\d{3}-\d{3}-\d{4})$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/heic", "image/heif", "application/pdf"];
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif", "application/pdf"];
 const MAX_FILE_MB = 5;
 // Fast single-pass photo target: fit the long edge inside 900px as WebP.
 const WEBP_MAX_EDGE = 900;
@@ -109,7 +109,7 @@ export function VaccineForm() {
     if (!ALLOWED_TYPES.includes(selected.type)) {
       setFile(null);
       clearPreview();
-      setFileError("Please upload a photo (JPG, PNG, HEIC) or PDF.");
+      setFileError("Please upload a photo (JPG, PNG, WebP, HEIC) or PDF.");
       return;
     }
     if (selected.size > MAX_FILE_MB * 1024 * 1024) {
@@ -339,7 +339,7 @@ export function VaccineForm() {
               <label className={`vaccine-upload${file ? " has-file" : ""}`}>
                 <input
                   type="file"
-                  accept="image/jpeg,image/png,image/heic,image/heif,application/pdf,.jpg,.jpeg,.png,.heic,.pdf"
+                  accept="image/jpeg,image/png,image/webp,image/heic,image/heif,application/pdf,.jpg,.jpeg,.png,.webp,.heic,.heif,.pdf"
                   onChange={handleFileChange}
                   className="vaccine-upload-input"
                 />
@@ -352,7 +352,7 @@ export function VaccineForm() {
                 ) : (
                   <>
                     <strong>Tap to upload a vaccine card</strong>
-                    <span>Photo (JPG, PNG, HEIC) or PDF · up to 5 MB · photos shrunk automatically</span>
+                    <span>Photo (JPG, PNG, WebP, HEIC) or PDF · up to 5 MB · photos shrunk automatically</span>
                   </>
                 )}
               </label>

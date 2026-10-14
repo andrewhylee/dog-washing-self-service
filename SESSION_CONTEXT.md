@@ -78,8 +78,9 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 
 ## Vaccination cards (photo storage)
 
-- Upload limit **5 MB** (`MAX_FILE_MB` in `components/vaccine-form.tsx`; copy in form + `/vaccinations` page).
-  Fits Cloudinary free (10 MB/file) and Discord webhook (20 MB/file) caps.
+- Upload limit **5 MB** (`MAX_FILE_MB`; fits Cloudinary free 10 MB/file and Discord 20 MB/file caps).
+- Accepted upload formats: JPG, PNG, WebP, HEIC/HEIF, PDF (`ALLOWED_TYPES` + input `accept`,
+  user copy names all four photo types). WebP inputs skip conversion (uploaded as-is; already optimal).
 - Flow: browser → `/api/upload` (Cloudinary, returns `secure_url`; PDF→first-page preview and HEIC→preview
   delivery rewrites) → `/api/discord` (team copy with attachment) → `/api/vaccine`
   (metadata + `card_url` into owner-only `vaccine_records`). here.now stores only the URL string.
