@@ -83,13 +83,12 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - Flow: browser → `/api/upload` (Cloudinary, returns `secure_url`; PDF→first-page preview and HEIC→preview
   delivery rewrites) → `/api/discord` (team copy with attachment) → `/api/vaccine`
   (metadata + `card_url` into owner-only `vaccine_records`). here.now stores only the URL string.
-- **Photo shrink (2026-10-14, guaranteed ≤100 KB)**: `convertToWebp()` in `components/vaccine-form.tsx`
-  tries up to 9 encodes (1600px q60→30, then 1280px, then 1024px) and uploads the first WebP under
-  100 KB; if none hits it, the smallest encode wins when it beats the original. Verified in lab:
-  986 KB photo → 94 KB, 1.2 MB illustration → 65 KB outgoing. Applies to JPEG/PNG (and HEIC where the
-  browser can decode it). Discord still gets the original; the record keeps the original `file.name`.
-  PDFs skip conversion. If the WebP POST is rejected, the form retries once with the original
-  so uploads never hard-fail on preset config.
+- **Photo shrink (2026-10-14, fast single pass: long edge ≤900px, WebP q65)**: `convertToWebp()`
+  in `components/vaccine-form.tsx` does ONE canvas encode (never upscales; ships the WebP only when it
+  beats the original). Measured: 986 KB photo → 50 KB, 1.2 MB illustration → 36 KB outgoing.
+  Applies to JPEG/PNG (and HEIC where the browser can decode it). Discord still gets the original;
+  the record keeps the original `file.name`. PDFs skip conversion. If the WebP POST is rejected,
+  the form retries once with the original so uploads never hard-fail on preset config.
 - **Cloudinary preset findings (dog_wash, console `zjq8kp0w`) — READ BEFORE TOUCHING:**
   (a) The preset initially rejected webp (`400 "Image file format webp not allowed"`, seen live) — webp
   uploads now succeed (93 KB `.webp` stored 2026-10-14), so someone has since allowed it.
