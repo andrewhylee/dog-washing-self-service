@@ -8,7 +8,7 @@ Handoff notes so a new session can resume work quickly. All known state is captu
   dedicated account (one account per project).
 - Public site slug: `liminal-realm-qvmd` — live URL: **https://liminal-realm-qvmd.here.now**,
   also mounted at the root of **https://freshpawsdogwash.com/** (mount_path `""`).
-  (booking page: `/book`, vaccinations page: `/vaccinations`). Live version: `01M4XVY25KEP59Z2ABH028HSQZ`.
+  (booking page: `/book`, vaccinations page: `/vaccinations`). Live version: `01M4Y3JBWVVRX60V00MFYEVBNP`.
 - Admin slug: `dewy-sketch-h6k7` — canonical URL: **https://freshpawsdogwash.com/office/**
   (custom-domain mount `office` → slug `dewy-sketch-h6k7`). The bare `https://dewy-sketch-h6k7.here.now/`
   308-redirects there (set via `PUT /api/v1/publish/dewy-sketch-h6k7/primary-domain
@@ -107,9 +107,9 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
   Allowed formats = webp,jpeg,jpg,heic,heif,pdf,png; NO transformations set (owner-confirmed 2026-10-14).
   This is the ideal end-state — leave it alone. WebP uploads accepted; HEIC verified end-to-end (stored
   `.heic`, delivered `f_webp`).
-- Records currently: 7 — mew/Johnny Bravo + ppo/pp (migrated Sep, REAL DATA), plus 5 owner live-form
-  tests 2026-10-14 (Keke 19:54; Te/Eheh/Ii/Yu 20:18–20:37, all the same `IMG_4007.jpeg`): NOT agent-created,
-  do NOT delete without asking. All agent zzz-* probes created and deleted same day.
+- Records currently: 2 — mew/Johnny Bravo + ppo/pp (migrated Sep, REAL DATA, do NOT delete).
+  The 5 owner live-form tests from 2026-10-14 (Keke, Te, Eheh, Ii, Yu) are gone — removed by the owner,
+  presumably via the dashboard. All agent zzz-* probes were created and deleted same day.
 
 ## Homepage section order (current)
 
@@ -152,8 +152,14 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
 - Custom domain `freshpawsdogwash.com` connected same day: root → public site, `/office/` → admin
   (admin rebuilt with `basePath: "/office"`; slug 308-redirects to the mount). Admin e2e **21/21 PASS**
   on the mount (`npm run qa:admin`, targets `https://freshpawsdogwash.com/office/`).
+- Upload optimization shipped same day: 5 MB cap → single-pass shrink (long edge ≤900px, WebP q65 w/
+  JPEG q0.7 fallback for encoder-less browsers, PDFs skip, webp-rejection retry) → parallel
+  Cloudinary+Discord uploads of the SAME shrunk file (measured 1 ms apart, ~50 KB each; original never
+  uploaded anywhere) → WebP accepted as upload input. Live version `01M4Y3JBW…`, e2e-equivalent verified
+  via intercepted lab probes (no live side effects). Repo: `2d33c5f` + `c38ab96` + `dd05c10`.
 - **Pending (owner, out of agent scope)**: do one real browser booking on the live site to confirm the Discord notification lands.
 - **CHANGE THE ADMIN PASSWORD** back to a real one before handing off (currently temp `testing111`)!
+- Old here.now account: sites + bookings/availability data still there; delete whenever owner confirms.
 - QA test may need the stale date / phone format check revisited.
 
 ## Owner admin site (vaccine records) — Next.js app in `admin/`
@@ -162,7 +168,7 @@ Two-collection architecture (owner explicitly wanted customer PII kept out of br
   → `office` mount → slug `dewy-sketch-h6k7`). The bare `https://dewy-sketch-h6k7.here.now/` 308-redirects
   here (primary-domain, synced:true; redirects take up to 60s to start, up to 1h to stop for return visitors).
 - **Architecture**: a SECOND Next.js static-export app living at `admin/` in the same repo (own `app/`,
-  `next.config.mjs` with `output:"export", trailingSlash:true, distDir:"out"`, `tsconfig.json`).
+  `next.config.mjs` with `output:"export", basePath:"/office", trailingSlash:true, distDir:"out"`, `tsconfig.json`).
   Built with `next build admin` (CLI supports a directory arg), output is `admin/out/`.
   Root `tsconfig.json` excludes `admin/**`; eslint ignores `admin/.next/**`/`admin/out/**`.
 - **Purpose**: lets the owner VIEW + DELETE submitted vaccine records without exposing owner-only data on the public site. Decided after proving the public-site approach impossible (here.now proxy does NOT forward client-supplied `Authorization`; injected key would make reads public).
