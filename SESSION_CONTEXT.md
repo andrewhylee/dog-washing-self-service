@@ -8,7 +8,7 @@ Handoff notes so a new session can resume work quickly. All known state is captu
   dedicated account (one account per project).
 - Public site slug: `liminal-realm-qvmd` — live URL: **https://liminal-realm-qvmd.here.now**,
    also mounted at the root of **https://freshpawsdogwash.com/** (mount_path `""`).
-   (booking page: `/book`, vaccinations page: `/vaccinations`). Live version: `01M4Y52FCB1SZJA9J8KNPDNWNN`.
+   (booking page: `/book`, vaccinations page: `/vaccinations`, Google-review QR page: `/google-review`). Live version: `01M4Y9TMR92N1X97ZQZP98YWJN`.
 - Admin slug: `dewy-sketch-h6k7` — canonical URL: **https://freshpawsdogwash.com/office/**
   (custom-domain mount `office` → slug `dewy-sketch-h6k7`). The bare `https://dewy-sketch-h6k7.here.now/`
   308-redirects there (set via `PUT /api/v1/publish/dewy-sketch-h6k7/primary-domain

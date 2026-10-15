@@ -8,6 +8,8 @@ export const site = {
     "https://www.google.com/maps/search/?api=1&query=Fresh%20Paws%20Dog%20Wash%20self%20serve%2C%2043-46%2044th%20St%2C%20Sunnyside%2C%20NY%2011104",
   googleListingHref:
     "https://www.google.com/maps/place/Fresh+Paws+Dog+Wash+self+serve/@40.7438368,-73.9205749,17z/data=!4m6!3m5!1s0x89c25f69eae2aaaf:0xfa11cc741c390f45!8m2!3d40.7438368!4d-73.9205749!16s%2Fg%2F11ntd8_40f",
+  googleReviewHref:
+    "https://www.google.com/maps/search/?api=1&query=Fresh%20Paws%20Dog%20Wash%20self%20serve&query_place_id=ChIJr6ri6mlfwokRRQ85HHTMEfo",
 } as const;
 
 export const googleReviews = [
